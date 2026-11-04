@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const tutorials = (await getCollection('tutorials', ({ data }) => !data.draft)).sort((a, b) =>
+	a.data.title.localeCompare(b.data.title),
+);
+---
+
+<BaseLayout title="Tutorials" description="Mapping and gameplay guides for ETJump.">
+	<h1>Tutorials</h1>
+	<p class="lede">Tutorials written by the community.</p>
+
+	{tutorials.length === 0 ? (
+		<p class="muted">
+			No tutorials yet. Add a Markdown file under <code>src/content/tutorials/</code>.
+		</p>
+	) : (
+		<div class="card-grid">
+			{tutorials.map((tutorial) => (
+				<a class="card" href={`/tutorials/${tutorial.id}/`}>
+					<h3>{tutorial.data.title}</h3>
+					<p>{tutorial.data.description}</p>
+				</a>
+			))}
+		</div>
+	)}
+</BaseLayout>

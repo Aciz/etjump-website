@@ -1,0 +1,75 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+const posts = (await getCollection('news', ({ data }) => !data.draft)).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<BaseLayout title="News" description="Development updates, release notes and news from the ETJump team.">
+	<h1>News</h1>
+	<p class="lede">Development updates, release notes and other news.</p>
+
+	{posts.length === 0 ? (
+		<p class="muted">
+			No posts yet. Add a Markdown file under <code>src/content/news/</code>.
+		</p>
+	) : (
+		<ul class="post-list">
+			{posts.map((post) => (
+				<li>
+					<a href={`/news/${post.id}/`}>
+						<span class="title">{post.data.title}</span>
+						<span class="date">
+							<FormattedDate date={post.data.pubDate} />
+						</span>
+						<span class="description">{post.data.description}</span>
+					</a>
+				</li>
+			))}
+		</ul>
+	)}
+</BaseLayout>
+
+<style>
+	.post-list {
+		list-style: none;
+		margin: 2rem 0 0;
+		padding: 0;
+		display: grid;
+		gap: 1rem;
+	}
+
+	.post-list a {
+		display: grid;
+		gap: 0.15rem;
+		padding: 1.25rem;
+		border: 1px solid var(--etj-border);
+		border-radius: var(--etj-radius);
+		background: var(--etj-bg-elevated);
+		text-decoration: none;
+		color: var(--etj-fg);
+	}
+
+	.post-list a:hover {
+		border-color: var(--etj-accent);
+		background: var(--etj-bg-hover);
+	}
+
+	.title {
+		font-weight: 700;
+		font-size: 1.1rem;
+	}
+
+	.date {
+		color: var(--etj-muted);
+		font-size: 0.85rem;
+	}
+
+	.description {
+		color: var(--etj-muted);
+		font-size: 0.95rem;
+	}
+</style>

@@ -1,0 +1,204 @@
+---
+import { Code } from 'astro:components';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const cvarSample = `// Draw the ETJump speed meter.
+// 1 = current speed, 2 = speed and max speed, 9 = tens only.
+etj_drawSpeed2 "1"
+
+// Switches the HUD between ETJump, DeFRaG and bound-key sets.
+etj_drawKeys "1"`;
+
+const entitySample = `{
+"classname" "target_timerun_start"
+"targetname" "start"
+"runname" "Main"
+"origin" "128 256 64"
+}`;
+---
+
+<BaseLayout title="Design system" description="A preview of the site's type, color, components and content styles.">
+	<p>
+		<span class="badge accent">Design preview</span>
+	</p>
+	<h1>Design system</h1>
+	<p class="lede">
+		A single page showing the type scale, palette and components used across the site and the documentation. Everything
+		here is driven by <code>src/styles/tokens.css</code> - change a token and both this page and{' '}
+		<a href="/docs">/docs</a> follow.
+	</p>
+
+	<h2>Buttons</h2>
+	<div class="row">
+		<a class="button" href="#">
+			Primary action
+		</a>
+		<a class="button secondary" href="#">
+			Secondary
+		</a>
+		<a class="button ghost" href="#">
+			Ghost
+		</a>
+		<button class="button" type="button">
+			Button element
+		</button>
+	</div>
+
+	<h2>Cards</h2>
+	<div class="card-grid">
+		<a class="card" href="/docs">
+			<h3>Documentation</h3>
+			<p>Installation, client configuration, mapping and server setup.</p>
+		</a>
+		<a class="card" href="/tutorials">
+			<h3>Tutorials</h3>
+			<p>Long-form mapping and gameplay guides.</p>
+		</a>
+		<a class="card" href="/tools">
+			<h3>Tools</h3>
+			<p>Calculators and utilities for mappers and players.</p>
+		</a>
+	</div>
+
+	<h2>Badges</h2>
+	<div class="row">
+		<span class="badge">Default</span>
+		<span class="badge accent">Accent</span>
+		<span class="badge success">Stable</span>
+		<span class="badge warning">Beta</span>
+		<span class="badge danger">Deprecated</span>
+	</div>
+
+	<h2>Asides</h2>
+	<div class="aside">
+		<p class="aside-title">Note</p>
+		<p>ETJump requires the original Enemy Territory assets. The mod itself is a client-side package.</p>
+	</div>
+	<div class="aside tip">
+		<p class="aside-title">Tip</p>
+		<p>
+			Bind <code>etj_drawSpeed2</code> to a key while learning strafe movement.
+		</p>
+	</div>
+	<div class="aside caution">
+		<p class="aside-title">Caution</p>
+		<p>Timerun records are stored by the server. Changing servers does not carry your personal bests over.</p>
+	</div>
+	<div class="aside danger">
+		<p class="aside-title">Warning</p>
+		<p>Removing a record is permanent unless the server keeps an archive.</p>
+	</div>
+
+	<h2>Prose</h2>
+	<p>
+		Regular body copy uses <strong>Inter</strong> at 16px with a 1.65 line height. Inline
+		<code>code</code> uses JetBrains Mono. <a href="#">Links</a> use the accent color and are underlined, so they remain
+		distinguishable without relying on color alone.
+	</p>
+	<ul>
+		<li>Lists inherit the body size and spacing.</li>
+		<li>Nested lists stay compact.</li>
+		<li>
+			Inline <kbd>kbd</kbd> elements are not styled separately yet.
+		</li>
+	</ul>
+	<blockquote>Blockquotes are reserved for quoted material such as changelog entries or community posts.</blockquote>
+
+	<h2>Cvar table</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Cvar</th>
+				<th>Values</th>
+				<th>Default</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<code>etj_drawSpeed2</code>
+				</td>
+				<td>0 – 9</td>
+				<td>1</td>
+				<td>Draws the ETJump speed meter.</td>
+			</tr>
+			<tr>
+				<td>
+					<code>etj_drawKeys</code>
+				</td>
+				<td>0 – 5</td>
+				<td>1</td>
+				<td>Draws pressed keys using one of five keysets.</td>
+			</tr>
+			<tr>
+				<td>
+					<code>etj_drawCGaz</code>
+				</td>
+				<td>bitflag</td>
+				<td>0</td>
+				<td>Draws the CGaz HUD.</td>
+			</tr>
+			<tr>
+				<td>
+					<code>etj_drawStrafeQuality</code>
+				</td>
+				<td>0 or 1</td>
+				<td>0</td>
+				<td>Toggles the strafe quality meter.</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Code</h2>
+	<p>Client configuration:</p>
+	<Code code={cvarSample} lang="c" />
+	<p>Entity definition:</p>
+	<Code code={entitySample} lang="json" />
+
+	<h2>Form controls</h2>
+	<div class="form-row">
+		<label>
+			Search
+			<input type="search" placeholder="Search cvars…" />
+		</label>
+		<label>
+			Sort
+			<select>
+				<option>Name</option>
+				<option>Default value</option>
+			</select>
+		</label>
+	</div>
+
+	<hr />
+	<p class="muted">
+		Compare this with the documentation shell at <a href="/docs">/docs</a>. The palette, type and radius should match;
+		only the layout differs.
+	</p>
+</BaseLayout>
+
+<style>
+	.row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.6rem;
+		margin: 1rem 0 1.5rem;
+	}
+
+	.form-row {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+		gap: 1rem;
+		max-width: 36rem;
+		margin: 1rem 0;
+	}
+
+	label {
+		display: grid;
+		gap: 0.35rem;
+		font-size: 0.85rem;
+		color: var(--etj-muted);
+	}
+</style>

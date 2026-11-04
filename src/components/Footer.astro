@@ -1,0 +1,54 @@
+---
+import { DISCORD_URL, DOCS_ARCHIVE_URL, GITHUB_URL } from '../consts';
+
+const year = new Date().getFullYear();
+---
+
+<footer>
+	<div class="inner">
+		<p>&copy; {year} ETJump Team</p>
+		<p class="links">
+			<a href={GITHUB_URL}>GitHub</a>
+			<a href={DISCORD_URL}>Discord</a>
+			<a href={DOCS_ARCHIVE_URL}>Documentation archive</a>
+		</p>
+	</div>
+</footer>
+
+<style>
+	footer {
+		border-top: 1px solid var(--etj-border);
+		background: var(--etj-surface-2);
+		color: var(--etj-muted);
+		font-size: 0.85rem;
+	}
+
+	.inner {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.5rem;
+		justify-content: space-between;
+		width: min(100% - 2rem, var(--etj-content-width));
+		margin-inline: auto;
+		padding-block: 1.25rem;
+	}
+
+	footer p {
+		margin: 0;
+	}
+
+	.links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+	}
+
+	footer a {
+		color: var(--etj-muted);
+		text-decoration: none;
+	}
+
+	footer a:hover {
+		color: var(--etj-fg-strong);
+	}
+</style>

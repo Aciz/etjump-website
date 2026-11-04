@@ -1,0 +1,110 @@
+/* Map the brand tokens onto Starlight's and Galaxy's CSS variables.
+ *
+ * Galaxy injects its stylesheet before our customCss, and its rules live in a
+ * cascade layer. These unlayered overrides therefore win without !important.
+ */
+
+:root,
+:root[data-theme='dark'] {
+	--sl-font: var(--etj-font-sans);
+	--sl-font-mono: var(--etj-font-mono);
+
+	--sl-color-white: var(--etj-fg-strong);
+	--sl-color-black: var(--etj-bg);
+
+	--sl-color-gray-1: #f4f5f7;
+	--sl-color-gray-2: #d0d0d5;
+	--sl-color-gray-3: #9aa0aa;
+	--sl-color-gray-4: #737a86;
+	--sl-color-gray-5: #4a515c;
+	--sl-color-gray-6: #343a44;
+	--sl-color-gray-7: #262a31;
+	--sl-color-gray-8: #1c1e23;
+	--sl-color-gray-9: #0d1117;
+
+	--sl-color-accent-low: var(--etj-accent-soft);
+	--sl-color-accent: var(--etj-accent-solid);
+	--sl-color-accent-high: var(--etj-accent-hover);
+
+	--sl-color-text: var(--etj-fg);
+	--sl-color-text-accent: var(--etj-accent);
+	--sl-color-text-invert: var(--etj-accent-contrast);
+	--sl-color-bg: var(--etj-bg);
+	--sl-color-bg-nav: var(--etj-surface-2);
+	--sl-color-bg-sidebar: var(--etj-surface-2);
+	--sl-color-bg-inline-code: var(--etj-inline-code-bg);
+	--sl-color-bg-accent: var(--etj-accent-solid);
+	--sl-color-hairline: var(--etj-border);
+	--sl-color-hairline-light: var(--etj-border);
+	--sl-color-hairline-shade: var(--etj-surface-2);
+
+	/* Galaxy component variables */
+	--fb-code-block-bg-color: var(--etj-code-bg);
+	--fb-ec-caption-bg-color: var(--etj-surface);
+	--fb-ec-caption-bb-color: var(--etj-border);
+	--fb-ec-language-color: var(--etj-muted);
+	--fb-table-header-bg-color: var(--etj-surface-2);
+	--fb-table-border-color: var(--etj-border);
+	--fb-level-2-bg: var(--etj-surface);
+	--fb-sidebar-color-current-bg: var(--etj-surface);
+	--fb-sidebar-color-current-hover: var(--etj-surface-hover);
+	--fb-sidebar-color-text-current: var(--etj-fg-strong);
+	--fb-toc-color-current-bg: color-mix(in srgb, var(--etj-accent) 18%, transparent);
+	--fb-toc-current-text-color: var(--etj-accent);
+	--fb-steps-bg-color: var(--etj-accent-solid);
+	--fb-steps-text-color: var(--etj-accent-contrast);
+	--fb-theme-btn-color-text: var(--etj-accent);
+	--fb-blacks: 244, 245, 247;
+	--purple-hsl: 180, 70%, 60%;
+	--overlay-blurple: hsla(var(--purple-hsl), 0.4);
+}
+
+:root[data-theme='light'] {
+	--sl-color-white: var(--etj-fg-strong);
+	--sl-color-black: var(--etj-bg);
+
+	--sl-color-gray-1: #0b0d10;
+	--sl-color-gray-2: #1b1e24;
+	--sl-color-gray-3: #3a404a;
+	--sl-color-gray-4: #5b6270;
+	--sl-color-gray-5: #8a919c;
+	--sl-color-gray-6: #c3c9d1;
+	--sl-color-gray-7: #e2e6ea;
+	--sl-color-gray-8: #f3f5f7;
+	--sl-color-gray-9: #fbfcfc;
+
+	--sl-color-accent-low: var(--etj-accent-soft);
+	--sl-color-accent: var(--etj-accent-solid);
+	--sl-color-accent-high: var(--etj-accent-hover);
+
+	--sl-color-text: var(--etj-fg);
+	--sl-color-text-accent: var(--etj-accent);
+	--sl-color-text-invert: var(--etj-accent-contrast);
+	--sl-color-bg: var(--etj-bg);
+	--sl-color-bg-nav: var(--etj-surface-2);
+	--sl-color-bg-sidebar: var(--etj-surface-2);
+	--sl-color-bg-inline-code: var(--etj-inline-code-bg);
+	--sl-color-bg-accent: var(--etj-accent-solid);
+	--sl-color-hairline: var(--etj-border);
+	--sl-color-hairline-light: var(--etj-border);
+	--sl-color-hairline-shade: var(--etj-border);
+
+	--fb-code-block-bg-color: var(--etj-code-bg);
+	--fb-ec-caption-bg-color: var(--etj-surface-2);
+	--fb-ec-caption-bb-color: var(--etj-border);
+	--fb-ec-language-color: var(--etj-muted);
+	--fb-table-header-bg-color: var(--etj-surface-2);
+	--fb-table-border-color: var(--etj-border);
+	--fb-level-2-bg: var(--etj-surface);
+	--fb-sidebar-color-current-bg: var(--etj-surface-2);
+	--fb-sidebar-color-current-hover: var(--etj-surface-hover);
+	--fb-sidebar-color-text-current: var(--etj-fg-strong);
+	--fb-toc-color-current-bg: color-mix(in srgb, var(--etj-accent) 12%, transparent);
+	--fb-toc-current-text-color: var(--etj-accent);
+	--fb-steps-bg-color: var(--etj-accent-solid);
+	--fb-steps-text-color: var(--etj-accent-contrast);
+	--fb-theme-btn-color-text: var(--etj-accent);
+	--fb-blacks: 0, 0, 0;
+	--purple-hsl: 180, 70%, 30%;
+	--overlay-blurple: hsla(var(--purple-hsl), 0.4);
+}

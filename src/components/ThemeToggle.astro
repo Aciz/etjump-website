@@ -1,0 +1,67 @@
+---
+// Two-state light/dark toggle. Writes the same localStorage key Starlight uses,
+// so the choice carries over when moving between the site and /docs.
+---
+
+<button id="theme-toggle" type="button" aria-label="Toggle color theme" title="Toggle color theme">
+	<svg class="icon sun" viewBox="0 0 24 24" aria-hidden="true">
+		<circle cx="12" cy="12" r="4"></circle>
+		<path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+	</svg>
+	<svg class="icon moon" viewBox="0 0 24 24" aria-hidden="true">
+		<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path>
+	</svg>
+</button>
+
+<script>
+	const button = document.getElementById('theme-toggle');
+	button?.addEventListener('click', () => {
+		const root = document.documentElement;
+		const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+		root.dataset.theme = next;
+		localStorage.setItem('starlight-theme', next);
+	});
+</script>
+
+<style>
+	button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		padding: 0;
+		border: 1px solid var(--etj-border);
+		border-radius: var(--etj-radius);
+		background: transparent;
+		color: var(--etj-muted);
+		cursor: pointer;
+	}
+
+	button:hover {
+		color: var(--etj-fg);
+		border-color: var(--etj-accent);
+	}
+
+	.icon {
+		width: 1rem;
+		height: 1rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.moon {
+		display: none;
+	}
+
+	:global(html[data-theme='dark']) .sun {
+		display: none;
+	}
+
+	:global(html[data-theme='dark']) .moon {
+		display: block;
+	}
+</style>

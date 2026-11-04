@@ -1,0 +1,84 @@
+/* Brand tokens. Single source of truth for both the site and Starlight.
+ *
+ * The palette is built around the in-game text color table, so the brand color
+ * can be reproduced in game:
+ *
+ *   B  #008080  (0.0, 0.5, 0.5)  primary accent, solid surfaces
+ *   B+ #4DD0D0                    lightened B for text on dark backgrounds
+ *   A  #FF991A  (1.0, 0.6, 0.1)  optional warm secondary accent
+ *
+ * Keep colors here and refer to the semantic names from components, never to
+ * raw hex values. The palette may still change before the rebrand settles.
+ */
+
+:root {
+	/* Surfaces */
+	--etj-bg: #17181c;
+	--etj-surface: #1c1e23;
+	--etj-surface-2: #0d1117;
+	--etj-surface-hover: #22252c;
+
+	/* Borders */
+	--etj-border: #262a31;
+	--etj-border-strong: #343a44;
+
+	/* Text */
+	--etj-fg: #d0d0d5;
+	--etj-fg-strong: #f4f5f7;
+	--etj-muted: #9aa0aa;
+
+	/* Accent - B (#008080) from the in-game color table.
+	   Text uses a lightened B; solid surfaces use exact B. */
+	--etj-accent: #4dd0d0;
+	--etj-accent-hover: #7fe8e8;
+	--etj-accent-solid: #008080;
+	--etj-accent-solid-hover: #00a3a3;
+	--etj-accent-contrast: #ffffff;
+	--etj-accent-soft: #0d2e2e;
+	/* A (#ff991a) - optional warm secondary */
+	--etj-accent-2: #ff991a;
+
+	/* Status */
+	--etj-success: #10b981;
+	--etj-warning: #f59e0b;
+	--etj-danger: #ef4444;
+	--etj-info: #3b82f6;
+
+	/* Code */
+	--etj-code-bg: #272a32;
+	--etj-inline-code-bg: #23262e;
+
+	/* Shape and type */
+	--etj-radius: 0.625rem;
+	--etj-radius-sm: 0.375rem;
+	--etj-font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--etj-font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
+	--etj-content-width: 72rem;
+	--etj-header-height: 3.5rem;
+}
+
+:root[data-theme='light'] {
+	--etj-bg: #fbfcfc;
+	--etj-surface: #ffffff;
+	--etj-surface-2: #f3f5f7;
+	--etj-surface-hover: #eceff3;
+
+	--etj-border: #e2e6ea;
+	--etj-border-strong: #cdd3da;
+
+	--etj-fg: #1b1e24;
+	--etj-fg-strong: #0b0d10;
+	--etj-muted: #5b6270;
+
+	/* Accent - B (#008080) for both text and solid surfaces */
+	--etj-accent: #008080;
+	--etj-accent-hover: #006666;
+	--etj-accent-solid: #008080;
+	--etj-accent-solid-hover: #006666;
+	--etj-accent-contrast: #ffffff;
+	--etj-accent-soft: #d6f5f5;
+	--etj-accent-2: #ff991a;
+
+	--etj-code-bg: #f6f7f9;
+	--etj-inline-code-bg: #eef0f3;
+}

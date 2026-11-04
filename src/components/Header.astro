@@ -1,0 +1,106 @@
+---
+import { DISCORD_URL, GITHUB_URL, SITE_TITLE } from '../consts';
+import HeaderLink from './HeaderLink.astro';
+import ThemeToggle from './ThemeToggle.astro';
+---
+
+<header>
+	<nav aria-label="Main">
+		<a class="brand" href="/">
+			{SITE_TITLE}
+		</a>
+
+		<div class="links">
+			<HeaderLink href="/news">News</HeaderLink>
+			<HeaderLink href="/tutorials">Tutorials</HeaderLink>
+			<HeaderLink href="/tools">Tools</HeaderLink>
+			<HeaderLink href="/resources">Resources</HeaderLink>
+			<HeaderLink href="/docs">Documentation</HeaderLink>
+		</div>
+
+		<div class="actions">
+			<a class="external" href={GITHUB_URL}>
+				GitHub
+			</a>
+			<a class="external" href={DISCORD_URL}>
+				Discord
+			</a>
+			<ThemeToggle />
+		</div>
+	</nav>
+</header>
+
+<style>
+	header {
+		min-height: var(--etj-header-height);
+		border-bottom: 1px solid var(--etj-border);
+		background: var(--etj-surface-2);
+	}
+
+	nav {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 1rem;
+		min-height: var(--etj-header-height);
+		width: min(100% - 2rem, var(--etj-content-width));
+		margin-inline: auto;
+		padding-block: 0.5rem;
+	}
+
+	.brand {
+		font-size: 1.05rem;
+		font-weight: 700;
+		color: var(--etj-fg-strong);
+		text-decoration: none;
+		letter-spacing: -0.01em;
+	}
+
+	.links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.15rem;
+	}
+
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.85rem;
+		margin-inline-start: auto;
+	}
+
+	.actions a {
+		font-size: 0.85rem;
+		color: var(--etj-muted);
+		text-decoration: none;
+	}
+
+	.actions a:hover {
+		color: var(--etj-fg-strong);
+	}
+
+	:global(.links a) {
+		padding: 0.35rem 0.6rem;
+		border-radius: var(--etj-radius-sm);
+		font-size: 0.9rem;
+		color: var(--etj-muted);
+		text-decoration: none;
+	}
+
+	:global(.links a:hover) {
+		background: var(--etj-surface-hover);
+		color: var(--etj-fg-strong);
+	}
+
+	:global(.links a.active) {
+		color: var(--etj-accent-hover);
+		background: var(--etj-surface);
+	}
+
+	@media (max-width: 640px) {
+		.actions .external {
+			display: none;
+		}
+	}
+</style>

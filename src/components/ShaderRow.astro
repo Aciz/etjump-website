@@ -1,0 +1,71 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+	/**
+	 * Path relative to src/assets/tutorials/, for example
+	 * "general-mapping-information/antiportal.jpg".
+	 */
+	image: string;
+	title: string;
+	alt?: string;
+}
+
+const { image, title, alt = title } = Astro.props;
+
+// Build-time lookup: no imports needed in the MDX file.
+const images = import.meta.glob<{ default: ImageMetadata }>('../assets/tutorials/**/*.{jpg,jpeg,png}', { eager: true });
+
+const key = `../assets/tutorials/${image}`;
+const imageModule = images[key];
+
+if (!imageModule) {
+	throw new Error(
+		`ShaderRow: image "${image}" not found. Pass a path relative to src/assets/tutorials/, ` +
+			'e.g. "general-mapping-information/antiportal.jpg".',
+	);
+}
+---
+
+<div class="shader-row">
+	<Image src={imageModule.default} {alt} width={80} height={80} loading="lazy" />
+	<div class="shader-row__text">
+		<b class="shader-row__title">{title}</b> - <slot />
+	</div>
+</div>
+
+<style>
+	.shader-row {
+		display: grid;
+		grid-template-columns: 5rem 1fr;
+		gap: 1rem;
+		align-items: center;
+		margin-bottom: 1rem;
+	}
+
+	/* The <img> comes from the Image component, so it doesn't carry this
+	   component's scope attribute; target it globally. */
+	.shader-row :global(img) {
+		width: 5rem;
+		height: 5rem;
+		object-fit: cover;
+		border-radius: var(--etj-radius-sm);
+	}
+
+	.shader-row__text {
+		color: var(--etj-muted);
+	}
+
+	/* MDX wraps the slot in a paragraph. Make it inline so the description
+	   continues after the title instead of starting on a new line. */
+	.shader-row__text :global(p) {
+		display: inline;
+		margin: 0;
+	}
+
+	.shader-row__title {
+		color: var(--etj-fg-strong);
+		text-transform: uppercase;
+	}
+</style>

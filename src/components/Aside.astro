@@ -1,0 +1,13 @@
+---
+interface Props {
+	type?: 'note' | 'tip' | 'caution' | 'danger';
+	title?: string;
+}
+
+const { type = 'note', title } = Astro.props;
+---
+
+<div class:list={['aside', type !== 'note' && type]}>
+	{title && <p class="aside-title">{title}</p>}
+	<slot />
+</div>

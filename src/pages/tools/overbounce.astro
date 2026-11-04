@@ -1,0 +1,198 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const MAX_HEIGHT = 65_536 * 2;
+---
+
+<BaseLayout title="Overbounce calculator" description="Calculate fall and jump overbounce heights for Enemy Territory.">
+	<h1>Overbounce calculator</h1>
+	<p class="lede">Find the heights that overbounce in ETJump.</p>
+
+	<section class="calculator">
+		<div class="fields">
+			<label for="min-height">Minimum height</label>
+			<input id="min-height" type="number" min="0" max={MAX_HEIGHT} step="1" value="0" />
+
+			<label for="max-height">Maximum height</label>
+			<input id="max-height" type="number" min="0" max={MAX_HEIGHT} step="1" value="1000" />
+		</div>
+
+		<div class="results">
+			<section>
+				<h2>Fall OB heights</h2>
+				<div class="card">
+					<ul id="fall-ob" class="ob-list"></ul>
+				</div>
+			</section>
+
+			<section>
+				<h2>Jump OB heights</h2>
+				<div class="card">
+					<ul id="jump-ob" class="ob-list"></ul>
+				</div>
+			</section>
+		</div>
+	</section>
+
+	<script>
+		// BROWSER: maths + DOM.
+		type OverbounceResult = {
+			fall: boolean;
+			jump: boolean;
+		};
+
+		const GRAVITY = 800;
+		const PMOVE_MSEC = 8;
+		const JUMP_VELOCITY = 270;
+
+		function checkOverbounce(height: number, gravity = GRAVITY, pmoveMsec = PMOVE_MSEC): OverbounceResult {
+			const psec = pmoveMsec / 1000;
+			const h0 = height;
+			const rintv = Math.round(gravity * psec);
+			const target = 0;
+
+			const a = (-psec * rintv) / 2;
+			const c = h0 - target;
+
+			let b = psec * (0 - (gravity * psec) / 2 + rintv / 2);
+			let n = Math.floor((-b - Math.sqrt(b * b - 4 * a * c)) / (2 * a));
+			let hn = h0 + psec * n * (0 - (gravity * psec) / 2 - ((n - 1) * rintv) / 2);
+			const fall = n !== 0 && hn < target + 0.25 && hn > target;
+
+			b = psec * (JUMP_VELOCITY - (gravity * psec) / 2 + rintv / 2);
+			n = Math.floor((-b - Math.sqrt(b * b - 4 * a * c)) / (2 * a));
+			hn = h0 + psec * n * (JUMP_VELOCITY - (gravity * psec) / 2 - ((n - 1) * rintv) / 2);
+			const jump = hn < target + 0.25 && hn > target;
+
+			return { fall, jump };
+		}
+
+		function getElement<T extends HTMLElement>(id: string): T {
+			const element = document.getElementById(id);
+			if (!element) throw new Error(`Missing element #${id}`);
+			return element as T;
+		}
+
+		const minInput = getElement<HTMLInputElement>('min-height');
+		const maxInput = getElement<HTMLInputElement>('max-height');
+		const fallList = getElement<HTMLUListElement>('fall-ob');
+		const jumpList = getElement<HTMLUListElement>('jump-ob');
+
+		const MAX_HEIGHT = Number(maxInput.max);
+
+		function clampHeight(value: number): number {
+			if (!Number.isFinite(value)) return 0;
+			return Math.min(MAX_HEIGHT, Math.max(0, Math.floor(value)));
+		}
+
+		function clampInput(input: HTMLInputElement): number {
+			const value = clampHeight(input.valueAsNumber);
+
+			// Don't rewrite a field the user has deliberately emptied.
+			if (input.value !== '' && input.valueAsNumber !== value) {
+				input.value = String(value);
+			}
+
+			return value;
+		}
+
+		function render(list: HTMLUListElement, values: number[]): void {
+			const fragment = document.createDocumentFragment();
+
+			for (const value of values) {
+				const item = document.createElement('li');
+				item.textContent = String(value);
+				item.className = 'ob-item';
+				fragment.append(item);
+			}
+
+			list.replaceChildren(fragment);
+		}
+
+		function calculate(): void {
+			const min = clampInput(minInput);
+			const max = clampInput(maxInput);
+
+			if (max < min) {
+				fallList.replaceChildren();
+				jumpList.replaceChildren();
+				return;
+			}
+
+			const fall: number[] = [];
+			const jump: number[] = [];
+
+			for (let height = min; height <= max; height++) {
+				const result = checkOverbounce(height);
+				if (result.fall) fall.push(height);
+				if (result.jump) jump.push(height);
+			}
+
+			render(fallList, fall);
+			render(jumpList, jump);
+		}
+
+		minInput.addEventListener('input', calculate);
+		maxInput.addEventListener('input', calculate);
+
+		calculate();
+	</script>
+
+	<style>
+		/* PAGE-SCOPED: layout for this route only. */
+		.calculator {
+			display: grid;
+			gap: 1.5rem;
+			margin-top: 2rem;
+		}
+
+		.fields {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+			gap: 1rem;
+			max-width: 32rem;
+		}
+
+		.fields label {
+			display: grid;
+			gap: 0.35rem;
+			color: var(--etj-muted);
+			font-size: 0.85rem;
+			align-items: center;
+		}
+
+		.results {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+			gap: 2rem;
+		}
+
+		.results h2 {
+			margin: 0 0 0.5rem;
+			font-size: 1.1rem;
+		}
+
+		.ob-list {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			font-family: var(--etj-font-mono);
+			font-size: 0.9rem;
+		}
+
+		/* The items are created in JavaScript, so they don't carry Astro's scope
+		   attribute. :global() is required to style them. */
+		:global(.ob-item) {
+			padding: 0.2rem 0;
+			border-bottom: 1px solid var(--etj-border);
+		}
+
+		:global(.ob-item:first-child) {
+			padding-top: 0;
+		}
+
+		:global(.ob-item:last-child) {
+			padding-bottom: 0;
+			border-bottom: 0;
+		}
+	</style>
+</BaseLayout>

@@ -1,0 +1,139 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+	const tutorials = await getCollection('tutorials', ({ data }) => !data.draft);
+	return tutorials.map((tutorial) => ({
+		params: { slug: tutorial.id },
+		props: tutorial,
+	}));
+}
+
+type Props = CollectionEntry<'tutorials'>;
+
+const tutorial = Astro.props;
+const { Content, headings } = await render(tutorial);
+
+// Match the old manual TOC: sections and subsections, not every h4.
+const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3);
+---
+
+<BaseLayout title={tutorial.data.title} description={tutorial.data.description}>
+	<div class:list={['tutorial-layout', { 'has-toc': toc.length > 0 }]}>
+		<article class="tutorial-content">
+			<header class="tutorial-header">
+				{tutorial.data.difficulty && <p class="badge">{tutorial.data.difficulty}</p>}
+				<h1>{tutorial.data.title}</h1>
+				<p class="lede">{tutorial.data.description}</p>
+			</header>
+
+			<div class="prose">
+				<Content />
+			</div>
+		</article>
+
+		{toc.length > 0 && (
+			<aside class="tutorial-toc">
+				<nav aria-label="On this page">
+					<p class="tutorial-toc__title">On this page</p>
+					<ul>
+						{toc.map((heading) => (
+							<li class={`depth-${heading.depth}`}>
+								<a href={`#${heading.slug}`}>{heading.text}</a>
+							</li>
+						))}
+					</ul>
+				</nav>
+			</aside>
+		)}
+	</div>
+</BaseLayout>
+
+<style>
+	.tutorial-layout {
+		display: grid;
+		gap: 2rem;
+		align-items: start;
+		justify-content: center;
+	}
+
+	.tutorial-layout.has-toc {
+		grid-template-columns: minmax(0, 52rem) 14rem;
+	}
+
+	.tutorial-content {
+		min-width: 0;
+		max-width: 52rem;
+	}
+
+	.tutorial-header {
+		margin-bottom: 2rem;
+	}
+
+	.badge {
+		display: inline-block;
+		margin: 0 0 0.5rem;
+		padding: 0.1rem 0.5rem;
+		border: 1px solid var(--etj-border);
+		border-radius: 999px;
+		color: var(--etj-muted);
+		font-size: 0.8rem;
+		text-transform: capitalize;
+	}
+
+	.prose {
+		max-width: 52rem;
+	}
+
+	.tutorial-toc {
+		position: sticky;
+		top: 1.5rem;
+		font-size: 0.85rem;
+		line-height: 1.5;
+	}
+
+	.tutorial-toc__title {
+		margin: 0 0 0.5rem;
+		color: var(--etj-muted);
+		font-size: 0.72rem;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	.tutorial-toc ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		border-left: 1px solid var(--etj-border);
+	}
+
+	.tutorial-toc li a {
+		display: block;
+		margin-left: -1px;
+		padding: 0.2rem 0 0.2rem 0.75rem;
+		border-left: 1px solid transparent;
+		color: var(--etj-muted);
+		text-decoration: none;
+	}
+
+	.tutorial-toc li a:hover {
+		color: var(--etj-fg-strong);
+		border-left-color: var(--etj-border-strong);
+	}
+
+	.tutorial-toc .depth-3 a {
+		padding-left: 1.5rem;
+	}
+
+	@media (max-width: 74rem) {
+		.tutorial-layout.has-toc {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.tutorial-toc {
+			display: none;
+		}
+	}
+</style>

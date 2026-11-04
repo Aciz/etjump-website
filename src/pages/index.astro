@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { DOCS_ARCHIVE_URL, RELEASES_URL, SITE_DESCRIPTION } from '../consts';
+---
+
+<BaseLayout title="ETJump" description={SITE_DESCRIPTION}>
+	<h1>ETJump</h1>
+	<p class="lede">A trickjump modification for Wolfenstein: Enemy Territory.</p>
+
+	<p>
+		<a class="button" href={RELEASES_URL}>
+			Download ETJump
+		</a>
+		<a class="button secondary" href={DOCS_ARCHIVE_URL}>
+			Read the documentation
+		</a>
+	</p>
+
+	<div class="card-grid">
+		<a class="card" href="/docs">
+			<h3>Documentation</h3>
+			<p>Currently live in Read the Docs - migration to the new site will happen in the future.</p>
+		</a>
+		<a class="card" href="/news">
+			<h3>News</h3>
+			<p>Development updates, release notes and other news.</p>
+		</a>
+		<a class="card" href="/tutorials">
+			<h3>Tutorials</h3>
+			<p>Mapping and gameplay guides, migrated from the old site.</p>
+		</a>
+		<a class="card" href="/tools">
+			<h3>Tools</h3>
+			<p>Utilities such as the overbounce calculator.</p>
+		</a>
+	</div>
+
+	<h2>Under development</h2>
+	<p class="muted">
+		The new website is still being developed. Content may be missing, things might look off, or not function yet.
+	</p>
+</BaseLayout>
