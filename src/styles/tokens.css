@@ -3,8 +3,8 @@
  * The palette is built around the in-game text color table, so the brand color
  * can be reproduced in game:
  *
- *   B  #008080  (0.0, 0.5, 0.5)  primary accent, solid surfaces
- *   B+ #4DD0D0                    lightened B for text on dark backgrounds
+ *   H  #006633  (0.0, 0.4, 0.2)  primary accent, solid surfaces
+ *   H+ #33B377                    lightened H for text on dark backgrounds
  *   A  #FF991A  (1.0, 0.6, 0.1)  optional warm secondary accent
  *
  * Keep colors here and refer to the semantic names from components, never to
@@ -27,14 +27,14 @@
 	--etj-fg-strong: #f4f5f7;
 	--etj-muted: #9aa0aa;
 
-	/* Accent - B (#008080) from the in-game color table.
-	   Text uses a lightened B; solid surfaces use exact B. */
-	--etj-accent: #4dd0d0;
-	--etj-accent-hover: #7fe8e8;
-	--etj-accent-solid: #008080;
-	--etj-accent-solid-hover: #00a3a3;
+	/* Accent - H (#006633) from the in-game color table.
+	   Text uses a lightened H; solid surfaces use exact H. */
+	--etj-accent: #33b377;
+	--etj-accent-hover: #5ccc93;
+	--etj-accent-solid: #006633;
+	--etj-accent-solid-hover: #008040;
 	--etj-accent-contrast: #ffffff;
-	--etj-accent-soft: #0d2e2e;
+	--etj-accent-soft: #0a2418;
 	/* A (#ff991a) - optional warm secondary */
 	--etj-accent-2: #ff991a;
 
@@ -70,13 +70,13 @@
 	--etj-fg-strong: #0b0d10;
 	--etj-muted: #5b6270;
 
-	/* Accent - B (#008080) for both text and solid surfaces */
-	--etj-accent: #008080;
-	--etj-accent-hover: #006666;
-	--etj-accent-solid: #008080;
-	--etj-accent-solid-hover: #006666;
+	/* Accent - H (#006633) for both text and solid surfaces */
+	--etj-accent: #006633;
+	--etj-accent-hover: #004d26;
+	--etj-accent-solid: #006633;
+	--etj-accent-solid-hover: #004d26;
 	--etj-accent-contrast: #ffffff;
-	--etj-accent-soft: #d6f5f5;
+	--etj-accent-soft: #dcf2e5;
 	--etj-accent-2: #ff991a;
 
 	--etj-code-bg: #f6f7f9;

@@ -58,7 +58,8 @@ tags: ['release']
 The file `src/content/news/my-post.md` becomes `/news/my-post/`. Drafts are hidden from lists, pages and RSS when
 `draft: true` is set.
 
-Tutorials work the same way under `src/content/tutorials/`, with `title`, `description`, and optional tags (currently unused).
+Tutorials work the same way under `src/content/tutorials/`, with `title`, `description`, and optional tags (currently
+unused).
 
 Documentation pages go under `src/content/docs/docs/` and are served at `/docs/<path>`. Starlight's sidebar is generated
 from that directory.
@@ -70,8 +71,8 @@ the project's custom CSS, so `src/styles/starlight.css` overrides its palette wi
 
 The site and `/docs` share one set of colors, fonts and radii through `src/styles/tokens.css` (`Inter` +
 `JetBrains Mono`, temporary Galaxy-derived palette). The color palette is temporary and will be updated in the future.
-The theme toggle writes to the same `localStorage` key Starlight uses (`starlight-theme`),
-so the choice carries between the main site and the docs.
+The theme toggle writes to the same `localStorage` key Starlight uses (`starlight-theme`), so the choice carries between
+the main site and the docs.
 
 `/design` is a style-tile page showing buttons, cards, badges, asides, prose, tables, code and inputs. Use it to
 evaluate palette changes before applying them elsewhere.
@@ -90,7 +91,7 @@ TODO
 - [ ] Proper home page
 - [ ] Proper downloads page
 - [ ] Migrate documentation from Read the Docs
-- [ ] Settle the color palette and general redesign
+- [x] Settle the color palette and general redesign
 - [ ] Override the Starlight header so `/docs` uses the site navigation
 - [ ] Port over starlight's component themes to the website
 - [ ] Deploy and sunset the old site
