@@ -55,6 +55,10 @@
 	--etj-font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
 	--etj-content-width: 72rem;
 	--etj-header-height: 3.5rem;
+	--etj-font-display: 'Saira Variable', var(--etj-font-sans);
+	--etj-display-weight: 800;
+	--etj-display-stretch: 82%;
+	--etj-display-tracking: -0.01em;
 }
 
 :root[data-theme='light'] {
