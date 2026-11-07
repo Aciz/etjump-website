@@ -1,0 +1,27 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import ArticleLayout from '../components/ArticleLayout.astro';
+
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
+
+interface Props {
+	frontmatter: {
+		title: string;
+		description: string;
+	};
+	headings?: Heading[];
+}
+
+const { frontmatter, headings = [] } = Astro.props;
+const { title, description } = frontmatter;
+---
+
+<BaseLayout title={title} description={description}>
+	<ArticleLayout title={title} description={description} headings={headings}>
+		<slot />
+	</ArticleLayout>
+</BaseLayout>
