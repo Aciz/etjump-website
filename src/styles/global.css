@@ -192,6 +192,38 @@ th code {
 	max-width: 46rem;
 }
 
+.section {
+	margin-top: clamp(3.5rem, 8vw, 6rem);
+}
+
+.section-head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: end;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 1.5rem;
+}
+
+.section-head h2 {
+	margin: 0 0 0.25rem;
+}
+
+.section-head p {
+	max-width: 44rem;
+	margin: 0;
+	color: var(--etj-muted);
+}
+
+.section-head > a {
+	color: var(--etj-muted);
+	font-size: 0.9rem;
+}
+
+.section-head > a:hover {
+	color: var(--etj-fg-strong);
+}
+
 .card-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));

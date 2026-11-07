@@ -116,7 +116,7 @@ const latestNews = (await getCollection('news', ({ data }) => !data.draft))
 					<Icon name="code" />
 				</span>
 				<h3>Development</h3>
-				<p>Interested in contributing to the development? The source code is available in Github.</p>
+				<p>Interested in contributing to the development? The source code is available on GitHub.</p>
 				<span class="card-arrow">
 					<Icon name="arrow" size={16} />
 				</span>
@@ -324,7 +324,6 @@ const latestNews = (await getCollection('news', ({ data }) => !data.draft))
 	/* A lighter wash means the photo is visible, so the hero copy needs to be
 		   darker than the usual muted tone to stay readable over it. */
 	:global(html[data-theme='light']) .hero .lede,
-	:global(html[data-theme='light']) .hero .meta,
 	:global(html[data-theme='light']) .hero .hero__note {
 		color: var(--etj-fg);
 	}
@@ -388,28 +387,6 @@ const latestNews = (await getCollection('news', ({ data }) => !data.draft))
 		}
 	}
 
-	.eyebrow {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.5rem;
-		margin: 0 0 1.25rem;
-		padding: 0.3rem 0.65rem;
-		border: 1px solid var(--etj-border);
-		border-radius: 999px;
-		background: var(--etj-surface);
-		color: var(--etj-muted);
-		font-size: 0.78rem;
-	}
-
-	.eyebrow::before {
-		content: '';
-		width: 0.45rem;
-		height: 0.45rem;
-		border-radius: 50%;
-		background: var(--etj-accent);
-		box-shadow: 0 0 0 3px color-mix(in srgb, var(--etj-accent) 20%, transparent);
-	}
-
 	.hero h1 {
 		margin: 0 0 1.25rem;
 		font-family: var(--etj-font-display);
@@ -444,60 +421,8 @@ const latestNews = (await getCollection('news', ({ data }) => !data.draft))
 		line-height: 1.4;
 	}
 
-	.meta {
-		margin: 1.25rem 0 0;
-		color: var(--etj-muted);
-		font-size: 0.85rem;
-	}
-
-	.meta a {
-		color: inherit;
-	}
-
-	.meta a:hover {
-		color: var(--etj-fg-strong);
-	}
-
-	.meta__dot {
-		margin-inline: 0.35rem;
-	}
-
 	.hero + .section {
 		margin-top: clamp(2.5rem, 5vw, 4rem);
-	}
-
-	/* ------------------------------------------------------------- sections ---- */
-
-	.section {
-		margin-top: clamp(3.5rem, 8vw, 6rem);
-	}
-
-	.section-head {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: end;
-		justify-content: space-between;
-		gap: 1rem;
-		margin-bottom: 1.5rem;
-	}
-
-	.section-head h2 {
-		margin: 0 0 0.25rem;
-	}
-
-	.section-head p {
-		max-width: 40rem;
-		margin: 0;
-		color: var(--etj-muted);
-	}
-
-	.section-head > a {
-		color: var(--etj-muted);
-		font-size: 0.9rem;
-	}
-
-	.section-head > a:hover {
-		color: var(--etj-fg-strong);
 	}
 
 	.card-icon {
@@ -531,30 +456,7 @@ const latestNews = (await getCollection('news', ({ data }) => !data.draft))
 		font-size: 0.78rem;
 	}
 
-	/* ------------------------------------------------------------- features ---- */
-
-	@media (min-width: 60rem) {
-		.features {
-			grid-template-columns: repeat(3, minmax(0, 1fr));
-		}
-	}
-
-	.feature {
-		cursor: default;
-	}
-
-	.feature h3 {
-		margin-bottom: 0.35rem;
-		font-size: 1.05rem;
-	}
-
-	.feature p {
-		margin: 0;
-		color: var(--etj-muted);
-		font-size: 0.92rem;
-	}
-
-	/* --------------------------------------------------------------- mappers ---- */
+	/* ---------------------------------------------------------------- split ---- */
 
 	.split {
 		display: grid;
@@ -596,111 +498,6 @@ const latestNews = (await getCollection('news', ({ data }) => !data.draft))
 	.link-row p {
 		margin: 0;
 		font-size: 0.9rem;
-	}
-
-	/* ---------------------------------------------------------------- steps ---- */
-
-	.steps {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-		gap: 1rem;
-	}
-
-	.step {
-		padding: 1.25rem;
-		border: 1px solid var(--etj-border);
-		border-radius: var(--etj-radius);
-		background: var(--etj-surface);
-	}
-
-	.step__number {
-		margin: 0;
-		color: var(--etj-accent);
-		font-family: var(--etj-font-mono);
-		font-size: 0.8rem;
-		letter-spacing: 0.1em;
-	}
-
-	.step h3 {
-		margin: 0.5rem 0 0.35rem;
-		font-size: 1.05rem;
-	}
-
-	.step p:not(.step__number) {
-		margin: 0 0 0.75rem;
-		color: var(--etj-muted);
-		font-size: 0.92rem;
-	}
-
-	.step a {
-		font-size: 0.9rem;
-	}
-
-	/* ------------------------------------------------------------ spotlight ---- */
-
-	.spotlight {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 1.25rem;
-		padding: 1.5rem;
-		border: 1px solid color-mix(in srgb, var(--etj-accent) 30%, var(--etj-border));
-		border-radius: var(--etj-radius);
-		background: color-mix(in srgb, var(--etj-accent) 6%, var(--etj-surface));
-	}
-
-	.spotlight__icon {
-		display: grid;
-		place-items: center;
-		width: 3rem;
-		height: 3rem;
-		border-radius: var(--etj-radius);
-		background: color-mix(in srgb, var(--etj-accent) 15%, transparent);
-		color: var(--etj-accent);
-	}
-
-	.spotlight h2 {
-		margin: 0 0 0.25rem;
-		font-size: 1.25rem;
-	}
-
-	.spotlight p {
-		margin: 0;
-		color: var(--etj-muted);
-	}
-
-	.spotlight .button {
-		margin-left: auto;
-	}
-
-	/* ------------------------------------------------------------ community ---- */
-
-	.community {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1.5rem;
-		padding: 1.5rem;
-		border: 1px solid var(--etj-border);
-		border-radius: var(--etj-radius);
-		background: var(--etj-surface);
-	}
-
-	.community h2 {
-		margin: 0 0 0.25rem;
-		font-size: 1.3rem;
-	}
-
-	.community p {
-		margin: 0;
-		color: var(--etj-muted);
-	}
-
-	.community__links {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.6rem;
 	}
 
 	/* ------------------------------------------------------------- responsive ---- */
@@ -753,10 +550,6 @@ const latestNews = (await getCollection('news', ({ data }) => !data.draft))
 	@media (max-width: 40rem) {
 		.hero h1 {
 			font-size: clamp(2.5rem, 14vw, 4rem);
-		}
-
-		.spotlight .button {
-			margin-left: 0;
 		}
 	}
 </style>

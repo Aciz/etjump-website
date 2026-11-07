@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import { RELEASES_URL } from '../consts';
-import { buildLabel, formatReleaseDate, formatSize, loadReleaseData, type Release } from '../lib/releases';
+import { buildLabel, formatReleaseDate, formatSize, loadReleaseData } from '../lib/releases';
 
 const { stable, dev, older } = await loadReleaseData();
 
@@ -13,16 +13,14 @@ const devBuild = buildLabel(dev?.assetName ?? null);
 const devDate = formatReleaseDate(dev?.publishedAt ?? null);
 const devSize = formatSize(dev?.size ?? null);
 
+const olderDate = formatReleaseDate(older[0]?.publishedAt ?? null);
+const olderSize = formatSize(older[0]?.size ?? null);
+
 const platforms = [
 	{ name: 'Windows', arch: '32/64-bit' },
 	{ name: 'Linux', arch: '32/64-bit' },
 	{ name: 'macOS', arch: 'x86_64 / arm64' },
 ];
-
-const releaseLabel = (release: Release) => {
-	const date = formatReleaseDate(release.publishedAt);
-	return date ? `ETJump ${release.tag}` : release.tag;
-};
 
 interface Engine {
 	name: string;
@@ -176,7 +174,7 @@ const engines: Engine[] = [
 
 		<div class="other-releases">
 			{older.length > 0 ? (
-				<div class="release-picker" data-release-picker>
+				<div class="release-picker">
 					<div class="release-picker__head">
 						<h3>Old releases</h3>
 						<p>
@@ -196,7 +194,7 @@ const engines: Engine[] = [
 									data-date={formatReleaseDate(release.publishedAt) ?? ''}
 									data-size={formatSize(release.size) ?? ''}
 								>
-									{releaseLabel(release)}
+									ETJump {release.tag}
 								</option>
 							))}
 						</select>
@@ -206,12 +204,10 @@ const engines: Engine[] = [
 						</a>
 					</div>
 
-					<p class="release-picker__meta" data-release-meta>
-						{formatReleaseDate(older[0].publishedAt) && (
-							<span data-release-date>{formatReleaseDate(older[0].publishedAt)}</span>
-						)}
-						{formatReleaseDate(older[0].publishedAt) && formatSize(older[0].size) && <span data-release-sep>|</span>}
-						{formatSize(older[0].size) && <span data-release-size>{formatSize(older[0].size)}</span>}
+					<p class="release-picker__meta">
+						{olderDate && <span data-release-date>{olderDate}</span>}
+						{olderDate && olderSize && <span data-release-sep>|</span>}
+						{olderSize && <span data-release-size>{olderSize}</span>}
 						<a data-release-page href={older[0].url}>
 							View on GitHub
 						</a>
@@ -463,38 +459,6 @@ const engines: Engine[] = [
 		font-size: 0.9rem;
 	}
 
-	.section {
-		margin-top: clamp(3.5rem, 8vw, 6rem);
-	}
-
-	.section-head {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: end;
-		justify-content: space-between;
-		gap: 1rem;
-		margin-bottom: 1.5rem;
-	}
-
-	.section-head h2 {
-		margin: 0 0 0.25rem;
-	}
-
-	.section-head p {
-		max-width: 44rem;
-		margin: 0;
-		color: var(--etj-muted);
-	}
-
-	.section-head > a {
-		color: var(--etj-muted);
-		font-size: 0.9rem;
-	}
-
-	.section-head > a:hover {
-		color: var(--etj-fg-strong);
-	}
-
 	.other-releases {
 		display: grid;
 		grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
@@ -622,17 +586,6 @@ const engines: Engine[] = [
 	.engine-card__pending {
 		color: var(--etj-muted);
 		font-family: var(--etj-font-mono);
-	}
-
-	.download-help {
-		padding-top: 1.5rem;
-		border-top: 1px solid var(--etj-border);
-	}
-
-	.download-help p {
-		margin: 0;
-		color: var(--etj-muted);
-		font-size: 0.9rem;
 	}
 
 	@media (max-width: 60rem) {
