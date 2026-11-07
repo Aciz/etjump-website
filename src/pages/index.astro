@@ -1,42 +1,762 @@
 ---
+import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { DOCS_ARCHIVE_URL, RELEASES_URL, SITE_DESCRIPTION } from '../consts';
+import Icon from '../components/Icon.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import RepoActivity from '../components/RepoActivity.astro';
+import {
+	CURRENT_VERSION,
+	CURRENT_VERSION_DOWNLOAD,
+	CURRENT_VERSION_CHANGELOG,
+	DISCORD_URL,
+	DOCS_ARCHIVE_URL,
+	GITHUB_URL,
+	SITE_DESCRIPTION,
+} from '../consts';
+
+// Every hero screenshot, optimized once at build time. The page picks one at
+// random on each visit, so only the chosen file is downloaded by the browser.
+const heroShotModules = import.meta.glob<{ default: ImageMetadata }>('../assets/hero-screenshots/*.{jpg,jpeg,png}', {
+	eager: true,
+});
+
+const heroShotSources = Object.keys(heroShotModules)
+	.sort()
+	.map((key) => heroShotModules[key].default);
+
+const optimize = async (src: ImageMetadata, width: number) =>
+	(await getImage({ src, width, format: 'webp', quality: 72 })).src;
+
+const [heroShots, heroShotsMobile] = await Promise.all([
+	Promise.all(heroShotSources.map((src) => optimize(src, 2560))),
+	Promise.all(heroShotSources.map((src) => optimize(src, 1280))),
+]);
+
+const latestNews = (await getCollection('news', ({ data }) => !data.draft))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
 ---
 
 <BaseLayout title="ETJump" description={SITE_DESCRIPTION}>
-	<h1>ETJump</h1>
-	<p class="lede">A trickjump modification for Wolfenstein: Enemy Territory.</p>
+	<section class="hero">
+		<div class="hero__photos" aria-hidden="true">
+			<img class="hero__photo" data-hero-photo alt="" decoding="async" />
+			<img class="hero__photo" data-hero-photo alt="" decoding="async" />
+		</div>
+		<div class="hero__scrim" aria-hidden="true"></div>
 
-	<p>
-		<a class="button" href={RELEASES_URL}>
-			Download ETJump
-		</a>
-		<a class="button secondary" href={DOCS_ARCHIVE_URL}>
-			Read the documentation
-		</a>
-	</p>
+		<div class="hero__inner">
+			<h1>ETJump</h1>
 
-	<div class="card-grid">
-		<a class="card" href="/docs">
-			<h3>Documentation</h3>
-			<p>Currently live in Read the Docs - migration to the new site will happen in the future.</p>
-		</a>
-		<a class="card" href="/news">
-			<h3>News</h3>
-			<p>Development updates, release notes and other news.</p>
-		</a>
-		<a class="card" href="/tutorials">
-			<h3>Tutorials</h3>
-			<p>Mapping and gameplay guides, migrated from the old site.</p>
-		</a>
-		<a class="card" href="/tools">
-			<h3>Tools</h3>
-			<p>Utilities such as the overbounce calculator.</p>
-		</a>
-	</div>
+			<p class="lede">
+				A trickjump modification for Wolfenstein: Enemy Territory, where players use strafe jumping and other movement
+				mechanics to complete purpose-built trickjump maps.
+			</p>
 
-	<h2>Under development</h2>
-	<p class="muted">
-		The new website is still being developed. Content may be missing, things might look off, or not function yet.
-	</p>
+			<div class="hero__actions">
+				<div class="hero__cta">
+					<a class="button" href={CURRENT_VERSION_DOWNLOAD}>
+						Download ETJump {CURRENT_VERSION}
+					</a>
+					<p class="hero__note">Supports Windows, Linux and macOS</p>
+				</div>
+				<a class="button secondary" href={CURRENT_VERSION_CHANGELOG}>
+					View release notes
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="section-head">
+			<div>
+				<h2>Start here</h2>
+				<p>Everything you need to get started with ETJump.</p>
+			</div>
+		</div>
+
+		<div class="card-grid">
+			<a class="card link-card" href="/downloads">
+				<span class="card-icon">
+					<Icon name="download" />
+				</span>
+				<h3>Downloads</h3>
+				<p>Get the mod and the full installer for Wolfenstein: Enemy Territory.</p>
+				<span class="card-arrow">
+					<Icon name="arrow" size={16} />
+				</span>
+			</a>
+
+			<a class="card link-card" href={DOCS_ARCHIVE_URL}>
+				<span class="card-icon">
+					<Icon name="book" />
+				</span>
+				<h3>Documentation</h3>
+				<p>Learn how to configure the mod, host a server or find information about making maps.</p>
+				<span class="card-arrow">
+					<Icon name="arrow" size={16} />
+				</span>
+			</a>
+
+			<a class="card link-card" href={DISCORD_URL}>
+				<span class="card-icon">
+					<Icon name="community" />
+				</span>
+				<h3>Join the community</h3>
+				<p>Join our Discord server to chat and meet with other players in the community.</p>
+				<span class="card-arrow">
+					<Icon name="arrow" size={16} />
+				</span>
+			</a>
+
+			<a class="card link-card" href={GITHUB_URL}>
+				<span class="card-icon">
+					<Icon name="code" />
+				</span>
+				<h3>Development</h3>
+				<p>Interested in contributing to the development? The source code is available in Github.</p>
+				<span class="card-arrow">
+					<Icon name="arrow" size={16} />
+				</span>
+			</a>
+		</div>
+	</section>
+
+	<section class="section split">
+		<div>
+			<h2>Resources and guides</h2>
+			<p class="lede">
+				ETJump is built around community-made maps. Check out some of the guides and resources we have collected to
+				learn anything from the basics to more advanced topics.
+			</p>
+			<a class="button secondary" href="/resources/mapping/">
+				Browse mapping resources
+			</a>
+		</div>
+
+		<div class="link-list">
+			<a class="card link-row" href="/tutorials/general-mapping-information/">
+				<span class="card-icon">
+					<Icon name="info" />
+				</span>
+				<div>
+					<h3>General mapping information</h3>
+					<p>Useful generic information - sizes, dimensions, limits, errors etc.</p>
+				</div>
+			</a>
+
+			<a class="card link-row" href="https://etjump.readthedocs.io/en/latest/mapping/mapping_entities.html">
+				<span class="card-icon">
+					<Icon name="cube" />
+				</span>
+				<div>
+					<h3>Entity documentation</h3>
+					<p>Explore and learn how to use entities that ETJump provides.</p>
+				</div>
+			</a>
+
+			<a class="card link-row" href="https://etjump.readthedocs.io/en/latest/mapping/mapscripting.html">
+				<span class="card-icon">
+					<Icon name="script" />
+				</span>
+				<div>
+					<h3>Mapscripting</h3>
+					<p>ETJump-specific mapscripting features and resources.</p>
+				</div>
+			</a>
+
+			<a class="card link-row" href="/tutorials/">
+				<span class="card-icon">
+					<Icon name="tutorials" />
+				</span>
+				<div>
+					<h3>Browse tutorials</h3>
+					<p>Various tutorials written by the community.</p>
+				</div>
+			</a>
+		</div>
+	</section>
+
+	<section class="section split">
+		<div>
+			<div class="section-head">
+				<div>
+					<h2>Latest news</h2>
+					<p>Release notes, development updates and other news.</p>
+				</div>
+				<a href="/news">All news</a>
+			</div>
+
+			{latestNews.length > 0 ? (
+				<div class="card-grid">
+					{latestNews.map((post) => (
+						<a class="card link-card" href={`/news/${post.id}/`}>
+							<p class="news-date">
+								<FormattedDate date={post.data.pubDate} />
+							</p>
+							<h3>{post.data.title}</h3>
+							<p>{post.data.description}</p>
+							<span class="card-arrow">
+								<Icon name="arrow" size={16} />
+							</span>
+						</a>
+					))}
+				</div>
+			) : (
+				<p class="muted">No news yet.</p>
+			)}
+		</div>
+
+		<RepoActivity />
+	</section>
 </BaseLayout>
+
+<script define:vars={{ heroShots, heroShotsMobile }}>
+	const photos = document.querySelectorAll('[data-hero-photo]');
+	const shots = window.matchMedia('(max-width: 45rem)').matches ? heroShotsMobile : heroShots;
+
+	if (photos.length > 1 && shots.length > 0) {
+		const fadeMs = 2000;
+		const hero = document.querySelector('.hero');
+
+		if (hero) {
+			hero.style.setProperty('--hero-fade', `${fadeMs}ms`);
+		}
+
+		let active = -1;
+		let current = -1;
+
+		const pick = () => {
+			let index = Math.floor(Math.random() * shots.length);
+
+			if (shots.length > 1 && index === current) {
+				index = (index + 1) % shots.length;
+			}
+
+			current = index;
+			return shots[index];
+		};
+
+		const swap = () => {
+			const nextIndex = active === 0 ? 1 : 0;
+			const next = photos[nextIndex];
+			const prev = active >= 0 ? photos[active] : null;
+			const url = pick();
+			const loader = new Image();
+
+			loader.onload = () => {
+				next.style.zIndex = '1';
+				if (prev) prev.style.zIndex = '0';
+
+				next.src = url;
+				active = nextIndex;
+
+				requestAnimationFrame(() => {
+					next.classList.add('is-visible');
+
+					if (prev) {
+						window.setTimeout(() => prev.classList.remove('is-visible'), fadeMs + 100);
+					}
+				});
+			};
+
+			loader.src = url;
+		};
+
+		swap();
+
+		if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			window.setInterval(() => {
+				if (!document.hidden) swap();
+			}, 30_000);
+		}
+	}
+</script>
+
+<style>
+	/* ---------------------------------------------------------------- hero ---- */
+
+	/*
+				Full-bleed band. The negative inline margins cancel `main`'s centered
+				content width; the body has `overflow-x: clip` so the sub-pixel
+				scrollbar overflow this creates never shows up as a scrollbar.
+			*/
+	.hero {
+		/* Overridden from the inline script so the fade duration has one source. */
+		--hero-fade: 900ms;
+		--hero-scrim-top: 80%;
+		--hero-scrim-bottom: 92%;
+		--hero-scrim-image: linear-gradient(
+			180deg,
+			color-mix(in srgb, var(--etj-bg) var(--hero-scrim-top), transparent),
+			color-mix(in srgb, var(--etj-bg) var(--hero-scrim-bottom), transparent)
+		);
+		position: relative;
+		isolation: isolate;
+		margin-top: -3rem;
+		margin-inline: calc(50% - 50vw);
+		padding: clamp(4rem, 9vw, 6.5rem) 1rem clamp(3.5rem, 7vw, 5rem);
+		background: linear-gradient(180deg, var(--etj-surface), var(--etj-bg));
+		text-align: center;
+		overflow: hidden;
+	}
+
+	/*
+			Light mode: keep a solid white field behind the copy, and fade the wash
+			out towards the left and right so the screenshot shows at the edges.
+		*/
+	:global(html[data-theme='light']) .hero {
+		--hero-scrim-image: linear-gradient(
+			90deg,
+			color-mix(in srgb, var(--etj-bg) 30%, transparent) 0%,
+			color-mix(in srgb, var(--etj-bg) 40%, transparent) 12%,
+			color-mix(in srgb, var(--etj-bg) 72%, transparent) 26%,
+			color-mix(in srgb, var(--etj-bg) 88%, transparent) 36%,
+			color-mix(in srgb, var(--etj-bg) 88%, transparent) 64%,
+			color-mix(in srgb, var(--etj-bg) 72%, transparent) 74%,
+			color-mix(in srgb, var(--etj-bg) 40%, transparent) 88%,
+			color-mix(in srgb, var(--etj-bg) 30%, transparent) 100%
+		);
+	}
+
+	/* A lighter wash means the photo is visible, so the hero copy needs to be
+		   darker than the usual muted tone to stay readable over it. */
+	:global(html[data-theme='light']) .hero .lede,
+	:global(html[data-theme='light']) .hero .meta,
+	:global(html[data-theme='light']) .hero .hero__note {
+		color: var(--etj-fg);
+	}
+
+	.hero__photos {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		pointer-events: none;
+	}
+
+	.hero__photo {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+		opacity: 0;
+		transition: opacity var(--hero-fade, 900ms) ease-out;
+	}
+
+	.hero__photo.is-visible {
+		opacity: 1;
+	}
+
+	.hero__scrim {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		background:
+			linear-gradient(to top, var(--etj-bg) 0, color-mix(in srgb, var(--etj-bg) 0%, transparent) 12rem),
+			radial-gradient(circle at 50% -10%, color-mix(in srgb, var(--etj-accent) 22%, transparent), transparent 60%),
+			radial-gradient(circle at 12% 110%, color-mix(in srgb, var(--etj-accent) 9%, transparent), transparent 55%),
+			var(--hero-scrim-image);
+		pointer-events: none;
+	}
+
+	.hero::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 2;
+		background-image:
+			linear-gradient(color-mix(in srgb, var(--etj-fg) 5%, transparent) 1px, transparent 1px),
+			linear-gradient(90deg, color-mix(in srgb, var(--etj-fg) 5%, transparent) 1px, transparent 1px);
+		background-size: 3rem 3rem;
+		mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black, transparent 100%);
+	}
+
+	.hero__inner {
+		position: relative;
+		z-index: 3;
+		max-width: 46rem;
+		margin-inline: auto;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.hero__photo {
+			transition: none;
+		}
+	}
+
+	.eyebrow {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin: 0 0 1.25rem;
+		padding: 0.3rem 0.65rem;
+		border: 1px solid var(--etj-border);
+		border-radius: 999px;
+		background: var(--etj-surface);
+		color: var(--etj-muted);
+		font-size: 0.78rem;
+	}
+
+	.eyebrow::before {
+		content: '';
+		width: 0.45rem;
+		height: 0.45rem;
+		border-radius: 50%;
+		background: var(--etj-accent);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--etj-accent) 20%, transparent);
+	}
+
+	.hero h1 {
+		margin: 0 0 1.25rem;
+		font-family: var(--etj-font-display);
+		font-size: clamp(3rem, 8vw, 5.5rem);
+		line-height: 0.95;
+		letter-spacing: var(--etj-display-tracking);
+	}
+
+	.hero .lede {
+		max-width: 38rem;
+		margin: 0 auto 2rem;
+	}
+
+	.hero__actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		justify-content: center;
+		gap: 0.75rem 2rem;
+	}
+
+	.hero__cta {
+		display: grid;
+		justify-items: center;
+		gap: 0.45rem;
+	}
+
+	.hero__note {
+		margin: 0;
+		color: var(--etj-muted);
+		font-size: 0.8rem;
+		line-height: 1.4;
+	}
+
+	.meta {
+		margin: 1.25rem 0 0;
+		color: var(--etj-muted);
+		font-size: 0.85rem;
+	}
+
+	.meta a {
+		color: inherit;
+	}
+
+	.meta a:hover {
+		color: var(--etj-fg-strong);
+	}
+
+	.meta__dot {
+		margin-inline: 0.35rem;
+	}
+
+	.hero + .section {
+		margin-top: clamp(2.5rem, 5vw, 4rem);
+	}
+
+	/* ------------------------------------------------------------- sections ---- */
+
+	.section {
+		margin-top: clamp(3.5rem, 8vw, 6rem);
+	}
+
+	.section-head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: end;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.section-head h2 {
+		margin: 0 0 0.25rem;
+	}
+
+	.section-head p {
+		max-width: 40rem;
+		margin: 0;
+		color: var(--etj-muted);
+	}
+
+	.section-head > a {
+		color: var(--etj-muted);
+		font-size: 0.9rem;
+	}
+
+	.section-head > a:hover {
+		color: var(--etj-fg-strong);
+	}
+
+	.card-icon {
+		display: inline-flex;
+		margin-bottom: 0.75rem;
+		color: var(--etj-accent);
+	}
+
+	.link-card {
+		position: relative;
+	}
+
+	.link-card h3 {
+		padding-right: 1.5rem;
+	}
+
+	.card-arrow {
+		position: absolute;
+		right: 1rem;
+		bottom: 1rem;
+		color: var(--etj-muted);
+	}
+
+	.link-card:hover .card-arrow {
+		color: var(--etj-accent);
+	}
+
+	.news-date {
+		margin: 0 0 0.25rem;
+		color: var(--etj-muted);
+		font-size: 0.78rem;
+	}
+
+	/* ------------------------------------------------------------- features ---- */
+
+	@media (min-width: 60rem) {
+		.features {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	.feature {
+		cursor: default;
+	}
+
+	.feature h3 {
+		margin-bottom: 0.35rem;
+		font-size: 1.05rem;
+	}
+
+	.feature p {
+		margin: 0;
+		color: var(--etj-muted);
+		font-size: 0.92rem;
+	}
+
+	/* --------------------------------------------------------------- mappers ---- */
+
+	.split {
+		display: grid;
+		grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+		gap: clamp(2rem, 5vw, 4rem);
+		align-items: start;
+	}
+
+	.split h2 {
+		margin-top: 0;
+	}
+
+	.split .lede {
+		margin-bottom: 1.5rem;
+	}
+
+	.link-list {
+		display: grid;
+		gap: 0.75rem;
+	}
+
+	.link-row {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 0.9rem;
+		align-items: start;
+		padding: 1rem 1.1rem;
+	}
+
+	.link-row .card-icon {
+		margin: 0;
+	}
+
+	.link-row h3 {
+		margin: 0 0 0.15rem;
+		font-size: 1rem;
+	}
+
+	.link-row p {
+		margin: 0;
+		font-size: 0.9rem;
+	}
+
+	/* ---------------------------------------------------------------- steps ---- */
+
+	.steps {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+		gap: 1rem;
+	}
+
+	.step {
+		padding: 1.25rem;
+		border: 1px solid var(--etj-border);
+		border-radius: var(--etj-radius);
+		background: var(--etj-surface);
+	}
+
+	.step__number {
+		margin: 0;
+		color: var(--etj-accent);
+		font-family: var(--etj-font-mono);
+		font-size: 0.8rem;
+		letter-spacing: 0.1em;
+	}
+
+	.step h3 {
+		margin: 0.5rem 0 0.35rem;
+		font-size: 1.05rem;
+	}
+
+	.step p:not(.step__number) {
+		margin: 0 0 0.75rem;
+		color: var(--etj-muted);
+		font-size: 0.92rem;
+	}
+
+	.step a {
+		font-size: 0.9rem;
+	}
+
+	/* ------------------------------------------------------------ spotlight ---- */
+
+	.spotlight {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 1.25rem;
+		padding: 1.5rem;
+		border: 1px solid color-mix(in srgb, var(--etj-accent) 30%, var(--etj-border));
+		border-radius: var(--etj-radius);
+		background: color-mix(in srgb, var(--etj-accent) 6%, var(--etj-surface));
+	}
+
+	.spotlight__icon {
+		display: grid;
+		place-items: center;
+		width: 3rem;
+		height: 3rem;
+		border-radius: var(--etj-radius);
+		background: color-mix(in srgb, var(--etj-accent) 15%, transparent);
+		color: var(--etj-accent);
+	}
+
+	.spotlight h2 {
+		margin: 0 0 0.25rem;
+		font-size: 1.25rem;
+	}
+
+	.spotlight p {
+		margin: 0;
+		color: var(--etj-muted);
+	}
+
+	.spotlight .button {
+		margin-left: auto;
+	}
+
+	/* ------------------------------------------------------------ community ---- */
+
+	.community {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1.5rem;
+		padding: 1.5rem;
+		border: 1px solid var(--etj-border);
+		border-radius: var(--etj-radius);
+		background: var(--etj-surface);
+	}
+
+	.community h2 {
+		margin: 0 0 0.25rem;
+		font-size: 1.3rem;
+	}
+
+	.community p {
+		margin: 0;
+		color: var(--etj-muted);
+	}
+
+	.community__links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+	}
+
+	/* ------------------------------------------------------------- responsive ---- */
+
+	@media (max-width: 60rem) {
+		.split {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+
+	/* `main` uses less top padding below 720px, so pull up by that amount instead. */
+	@media (max-width: 45rem) {
+		.hero {
+			margin-top: -2rem;
+		}
+
+		:global(html[data-theme='light']) .hero {
+			--hero-scrim-image: linear-gradient(
+				180deg,
+				color-mix(in srgb, var(--etj-bg) 90%, transparent),
+				color-mix(in srgb, var(--etj-bg) 80%, transparent),
+				color-mix(in srgb, var(--etj-bg) 50%, transparent)
+			);
+		}
+
+		/* Stack the buttons, but keep the download caption below both of them. */
+		.hero__actions {
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.hero__cta {
+			display: contents;
+		}
+
+		.hero__cta > .button {
+			order: 1;
+		}
+
+		.hero__actions > .button.secondary {
+			order: 3;
+		}
+
+		.hero__cta > .hero__note {
+			order: 2;
+			margin-top: 0.15rem;
+		}
+	}
+
+	@media (max-width: 40rem) {
+		.hero h1 {
+			font-size: clamp(2.5rem, 14vw, 4rem);
+		}
+
+		.spotlight .button {
+			margin-left: 0;
+		}
+	}
+</style>

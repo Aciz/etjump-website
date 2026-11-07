@@ -1,0 +1,258 @@
+---
+interface Props {
+	repo?: string;
+	limit?: number;
+}
+
+const { repo = 'etjump/etjump', limit = 5 } = Astro.props;
+const repoUrl = `https://github.com/${repo}`;
+---
+
+<section class="repo-activity" data-repo-activity data-repo={repo} data-limit={limit}>
+	<div class="repo-activity__head">
+		<div>
+			<h2>Repository activity</h2>
+			<p>Latest commits in the ETJump repository.</p>
+		</div>
+		<a href={repoUrl}>GitHub</a>
+	</div>
+
+	<ul class="repo-activity__list" data-activity-list>
+		<li class="repo-activity__placeholder">Loading recent commits…</li>
+	</ul>
+</section>
+
+<script>
+	interface Commit {
+		sha: string;
+		html_url: string;
+		commit: {
+			message: string;
+			author: { name: string; date: string } | null;
+		};
+		author: { login: string } | null;
+	}
+
+	const root = document.querySelector<HTMLElement>('[data-repo-activity]');
+	const repo = root?.dataset.repo ?? 'etjump/etjump';
+	const limit = Number(root?.dataset.limit ?? 5);
+	const list = root?.querySelector<HTMLUListElement>('[data-activity-list]');
+
+	const cacheKey = `etj-repo-activity:${repo}:${limit}`;
+	const cacheTtl = 5 * 60 * 1000;
+
+	const timeAgo = (iso: string | undefined): string => {
+		if (!iso) return '';
+
+		const date = new Date(iso);
+		const diff = (date.getTime() - Date.now()) / 1000;
+		const abs = Math.abs(diff);
+		const units: [Intl.RelativeTimeFormatUnit, number][] = [
+			['year', 31_536_000],
+			['month', 2_592_000],
+			['week', 604_800],
+			['day', 86_400],
+			['hour', 3_600],
+			['minute', 60],
+		];
+		const formatter = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' });
+
+		for (const [unit, seconds] of units) {
+			if (abs >= seconds) {
+				return formatter.format(Math.round(diff / seconds), unit);
+			}
+		}
+
+		return 'just now';
+	};
+
+	const render = (commits: Commit[]) => {
+		if (!list) return;
+
+		const items = commits.map((commit) => {
+			const item = document.createElement('li');
+			const link = document.createElement('a');
+			link.className = 'repo-activity__item';
+			link.href = commit.html_url;
+
+			const message = document.createElement('span');
+			message.className = 'repo-activity__message';
+			message.textContent = commit.commit.message.split('\n')[0];
+
+			const meta = document.createElement('span');
+			meta.className = 'repo-activity__meta';
+
+			const sha = document.createElement('span');
+			sha.className = 'repo-activity__sha';
+			sha.textContent = commit.sha.slice(0, 7);
+
+			const author = document.createElement('span');
+			author.textContent = commit.author?.login ?? commit.commit.author?.name ?? 'unknown';
+
+			const when = document.createElement('time');
+			when.dateTime = commit.commit.author?.date ?? '';
+			when.textContent = timeAgo(commit.commit.author?.date);
+
+			meta.append(sha, author, when);
+			link.append(message, meta);
+			item.append(link);
+
+			return item;
+		});
+
+		list.replaceChildren(...items);
+	};
+
+	const renderFallback = () => {
+		if (!list) return;
+
+		const item = document.createElement('li');
+		item.className = 'repo-activity__placeholder';
+
+		const message = document.createElement('p');
+		message.textContent = 'Recent commits are unavailable right now.';
+
+		const link = document.createElement('a');
+		link.href = `https://github.com/${repo}`;
+		link.textContent = 'View on GitHub';
+
+		item.append(message, link);
+		list.replaceChildren(item);
+	};
+
+	const readCache = (): Commit[] | null => {
+		try {
+			const raw = sessionStorage.getItem(cacheKey);
+			if (!raw) return null;
+
+			const parsed = JSON.parse(raw) as { at: number; commits: Commit[] };
+			return Date.now() - parsed.at < cacheTtl ? parsed.commits : null;
+		} catch {
+			return null;
+		}
+	};
+
+	const writeCache = (commits: Commit[]) => {
+		try {
+			sessionStorage.setItem(cacheKey, JSON.stringify({ at: Date.now(), commits }));
+		} catch {
+			// Storage can be unavailable; the feed still works without it.
+		}
+	};
+
+	if (root && list) {
+		const cached = readCache();
+		if (cached) {
+			render(cached);
+		} else {
+			fetch(`https://api.github.com/repos/${repo}/commits?per_page=${limit}`, {
+				headers: { Accept: 'application/vnd.github+json' },
+			})
+				.then((response) => {
+					if (!response.ok) throw new Error(`GitHub responded ${response.status}`);
+					return response.json() as Promise<Commit[]>;
+				})
+				.then((commits) => {
+					render(commits);
+					writeCache(commits);
+				})
+				.catch(renderFallback);
+		}
+	}
+</script>
+
+<style is:global>
+	.repo-activity {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.repo-activity__head {
+		display: flex;
+		align-items: end;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.repo-activity__head h2 {
+		margin: 0 0 0.25rem;
+	}
+
+	.repo-activity__head p {
+		margin: 0;
+		color: var(--etj-muted);
+	}
+
+	.repo-activity__head > a {
+		color: var(--etj-muted);
+		font-size: 0.9rem;
+		white-space: nowrap;
+	}
+
+	.repo-activity__head > a:hover {
+		color: var(--etj-fg-strong);
+	}
+
+	.repo-activity__list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.5rem;
+	}
+
+	.repo-activity__item {
+		display: grid;
+		gap: 0.35rem;
+		padding: 0.85rem 1rem;
+		border: 1px solid var(--etj-border);
+		border-radius: var(--etj-radius);
+		background: var(--etj-surface);
+		text-decoration: none;
+		transition:
+			border-color 120ms ease,
+			background 120ms ease;
+	}
+
+	.repo-activity__item:hover {
+		border-color: var(--etj-accent);
+		background: var(--etj-surface-hover);
+	}
+
+	.repo-activity__message {
+		display: -webkit-box;
+		overflow: hidden;
+		color: var(--etj-fg-strong);
+		font-size: 0.9rem;
+		line-height: 1.4;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+	}
+
+	.repo-activity__meta {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 0.25rem 0.5rem;
+		color: var(--etj-muted);
+		font-family: var(--etj-font-mono);
+		font-size: 0.72rem;
+	}
+
+	.repo-activity__sha {
+		color: var(--etj-accent);
+	}
+
+	.repo-activity__placeholder {
+		padding: 0.85rem 1rem;
+		border: 1px dashed var(--etj-border);
+		border-radius: var(--etj-radius);
+		color: var(--etj-muted);
+		font-size: 0.85rem;
+	}
+
+	.repo-activity__placeholder p {
+		margin: 0 0 0.35rem;
+	}
+</style>
