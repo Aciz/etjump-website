@@ -1,0 +1,657 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { RELEASES_URL } from '../consts';
+import { buildLabel, formatReleaseDate, formatSize, loadReleaseData, type Release } from '../lib/releases';
+
+const { stable, dev, older } = await loadReleaseData();
+
+const stableChangelog = `https://github.com/etjump/etjump/blob/dev/changelog.md#etjump-${stable.tag.replaceAll('.', '')}`;
+const stableDate = formatReleaseDate(stable.publishedAt);
+const stableSize = formatSize(stable.size);
+const devBuild = buildLabel(dev?.assetName ?? null);
+const devDate = formatReleaseDate(dev?.publishedAt ?? null);
+const devSize = formatSize(dev?.size ?? null);
+
+const platforms = [
+	{ name: 'Windows', arch: '32/64-bit' },
+	{ name: 'Linux', arch: '32/64-bit' },
+	{ name: 'macOS', arch: 'x86_64 / arm64' },
+];
+
+const releaseLabel = (release: Release) => {
+	const date = formatReleaseDate(release.publishedAt);
+	return date ? `ETJump ${release.tag}` : release.tag;
+};
+
+interface Engine {
+	name: string;
+	description: string;
+	href: string | null;
+	recommended: boolean;
+}
+
+const engines: Engine[] = [
+	{
+		name: 'ET: Legacy',
+		description:
+			'A modern, actively maintained source port of Wolfenstein: Enemy Territory. Includes a full installer for the game.',
+		href: 'https://www.etlegacy.com/download',
+		recommended: true,
+	},
+	{
+		name: 'ETe',
+		description:
+			'A source port closely based on the improvements made on Quake3e. More minimal than ET: Legacy - no installer/game assets, requires an existing ET 2.60b installation.',
+		href: 'https://github.com/etfdevs/ETe/releases/tag/latest',
+		recommended: true,
+	},
+	{
+		name: 'ET 2.60b',
+		description:
+			'The original Wolfenstein: Enemy Territory release. Functional, but lacks many modern features that source ports provide.',
+		href: 'https://www.splashdamage.com/games/wolfenstein-enemy-territory/',
+		recommended: false,
+	},
+	{
+		name: 'ET 2.60b (Steam)',
+		description: '2022 Steam release of the original ET 2.60b.',
+		href: 'https://store.steampowered.com/app/1873030/Wolfenstein_Enemy_Territory/',
+		recommended: false,
+	},
+];
+---
+
+<BaseLayout title="Downloads" description="Download the latest ETJump release, development builds and older versions.">
+	<header class="downloads-intro">
+		<h1>Downloads</h1>
+		<p class="lede">Everything you need to get started with playing or hosting a server.</p>
+		<p class="downloads-intro__note">
+			ETJump is a mod. You need an existing Wolfenstein: Enemy Territory installation to play.
+		</p>
+	</header>
+
+	<section class="downloads-latest" aria-label="Latest release">
+		<article class="release release--stable release--banner">
+			<div class="release__main">
+				<p class="release__eyebrow">
+					<span class="badge accent">Stable release</span>
+					<span class="badge">Recommended</span>
+				</p>
+				<h2>ETJump {stable.tag}</h2>
+				<p class="release__description">
+					The latest stable version, recommended for players and server operators.
+					<br />
+					The package contains the binaries for all supported platforms.
+				</p>
+
+				<ul class="platforms" aria-label="Supported platforms">
+					{platforms.map((platform) => (
+						<li class="platform">
+							<span class="platform__name">{platform.name}</span>
+							<span class="platform__arch">{platform.arch}</span>
+						</li>
+					))}
+				</ul>
+
+				<p class="release__meta">
+					{stableDate && (
+						<span>
+							Released {stableDate}
+							{stableSize && ' |'}
+						</span>
+					)}
+					{stableSize && <span>{stableSize}</span>}
+				</p>
+			</div>
+
+			<div class="release__side">
+				<div class="release__actions">
+					{stable.downloadUrl && (
+						<a class="button" href={stable.downloadUrl}>
+							<Icon name="download" size={18} />
+							Download
+						</a>
+					)}
+					<a class="button secondary" href={stableChangelog}>
+						Release notes
+					</a>
+				</div>
+
+				<a class="release__link" href={stable.url}>
+					View on GitHub
+					<Icon name="arrow" size={14} />
+				</a>
+			</div>
+		</article>
+	</section>
+
+	<section class="section">
+		<div class="section-head">
+			<div>
+				<h2>Game engines</h2>
+				<p>ETJump is compatible with the original game, as well as the major source ports.</p>
+			</div>
+		</div>
+
+		<div class="engine-grid">
+			{engines.map((engine) => {
+				const Tag = engine.href ? 'a' : 'div';
+
+				return (
+					<Tag
+						class:list={['card', 'engine-card', { 'engine-card--pending': !engine.href }]}
+						href={engine.href ?? undefined}
+					>
+						<div class="engine-card__head">
+							<span class="engine-card__icon">
+								<Icon name="cube" />
+							</span>
+							{engine.recommended && <span class="badge accent">Recommended</span>}
+						</div>
+						<h3>{engine.name}</h3>
+						<p>{engine.description}</p>
+						{engine.href ? (
+							<span class="engine-card__link">
+								Download
+								<Icon name="arrow" size={14} />
+							</span>
+						) : (
+							<span class="engine-card__pending">Download link coming soon</span>
+						)}
+					</Tag>
+				);
+			})}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="section-head">
+			<div>
+				<h2>Other releases</h2>
+				<p>Older versions and the rolling development build.</p>
+			</div>
+			<a href={RELEASES_URL}>All releases on GitHub</a>
+		</div>
+
+		<div class="other-releases">
+			{older.length > 0 ? (
+				<div class="release-picker" data-release-picker>
+					<div class="release-picker__head">
+						<h3>Old releases</h3>
+						<p>
+							Note that old releases are unsupported. They are provided here for historical reasons. Operating system
+							support varies.
+						</p>
+					</div>
+
+					<label for="release-select">Version</label>
+					<div class="release-picker__controls">
+						<select id="release-select" data-release-select>
+							{older.map((release) => (
+								<option
+									value={release.tag}
+									data-download={release.downloadUrl ?? ''}
+									data-page={release.url}
+									data-date={formatReleaseDate(release.publishedAt) ?? ''}
+									data-size={formatSize(release.size) ?? ''}
+								>
+									{releaseLabel(release)}
+								</option>
+							))}
+						</select>
+
+						<a class="button secondary" data-release-download href={older[0].downloadUrl ?? older[0].url}>
+							{older[0].downloadUrl ? `Download ${older[0].tag}` : 'View release'}
+						</a>
+					</div>
+
+					<p class="release-picker__meta" data-release-meta>
+						{formatReleaseDate(older[0].publishedAt) && (
+							<span data-release-date>{formatReleaseDate(older[0].publishedAt)}</span>
+						)}
+						{formatReleaseDate(older[0].publishedAt) && formatSize(older[0].size) && <span data-release-sep>|</span>}
+						{formatSize(older[0].size) && <span data-release-size>{formatSize(older[0].size)}</span>}
+						<a data-release-page href={older[0].url}>
+							View on GitHub
+						</a>
+					</p>
+				</div>
+			) : (
+				<p class="muted">
+					Older releases are available on <a href={RELEASES_URL}>GitHub</a>.
+				</p>
+			)}
+
+			<article class="release release--dev">
+				<p class="release__eyebrow">
+					<span class="badge">Development build</span>
+				</p>
+				<h3>Latest build</h3>
+				<p class="release__description">
+					Latest build from the development branch. Potentially unstable and buggy - use at your own risk. Not
+					recommended for server operators.
+				</p>
+
+				{dev ? (
+					<>
+						<p class="release__meta">
+							{devBuild && <span class="release__build">{devBuild}</span>}
+							{devDate && (
+								<span>
+									Built {devDate}
+									{devSize && ' |'}
+								</span>
+							)}
+							{devSize && <span>{devSize}</span>}
+						</p>
+
+						<div class="release__actions">
+							{dev.downloadUrl && (
+								<a class="button secondary" href={dev.downloadUrl}>
+									<Icon name="download" size={18} />
+									Download build
+								</a>
+							)}
+							<a class="button ghost" href={dev.url}>
+								View release
+								<Icon name="arrow" size={14} />
+							</a>
+						</div>
+					</>
+				) : (
+					<p class="release__unavailable">
+						The development build is unavailable right now. Check the
+						<a href={RELEASES_URL}> releases page</a> on GitHub.
+					</p>
+				)}
+			</article>
+		</div>
+	</section>
+</BaseLayout>
+
+<script>
+	const select = document.querySelector<HTMLSelectElement>('[data-release-select]');
+	const download = document.querySelector<HTMLAnchorElement>('[data-release-download]');
+	const date = document.querySelector<HTMLElement>('[data-release-date]');
+	const separator = document.querySelector<HTMLElement>('[data-release-sep]');
+	const size = document.querySelector<HTMLElement>('[data-release-size]');
+	const page = document.querySelector<HTMLAnchorElement>('[data-release-page]');
+
+	if (select && download) {
+		const update = () => {
+			const option = select.selectedOptions[0];
+			if (!option) return;
+
+			const asset = option.dataset.download;
+			download.href = asset || option.dataset.page || download.href;
+			download.textContent = asset ? `Download ${option.value}` : 'View release';
+
+			if (date) {
+				date.textContent = option.dataset.date ?? '';
+				date.hidden = !option.dataset.date;
+			}
+			if (size) {
+				size.textContent = option.dataset.size ?? '';
+				size.hidden = !option.dataset.size;
+			}
+			if (separator) separator.hidden = !(option.dataset.date && option.dataset.size);
+			if (page && option.dataset.page) page.href = option.dataset.page;
+		};
+
+		select.addEventListener('change', update);
+		update();
+	}
+</script>
+
+<style>
+	.downloads-intro {
+		max-width: 46rem;
+	}
+
+	.downloads-intro .lede {
+		margin-bottom: 0.75rem;
+	}
+
+	.downloads-intro__note {
+		margin: 0;
+		color: var(--etj-muted);
+		font-size: 0.9rem;
+	}
+
+	.downloads-latest {
+		margin-top: clamp(2rem, 5vw, 3rem);
+	}
+
+	.release {
+		display: flex;
+		flex-direction: column;
+		padding: 1.5rem;
+		border: 1px solid var(--etj-border);
+		border-radius: var(--etj-radius);
+		background: var(--etj-surface);
+	}
+
+	.release--stable {
+		border-color: color-mix(in srgb, var(--etj-accent) 45%, var(--etj-border));
+		background: color-mix(in srgb, var(--etj-accent) 5%, var(--etj-surface));
+	}
+
+	.release--banner {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 1.5rem 2.5rem;
+		align-items: center;
+		padding: 1.75rem 2rem;
+	}
+
+	.release--banner h2 {
+		font-size: clamp(1.6rem, 3vw, 1.9rem);
+	}
+
+	.release__side {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 0.75rem;
+	}
+
+	.release__side .release__actions {
+		margin-top: 0;
+	}
+
+	.release__side .release__link {
+		margin-top: 0;
+	}
+
+	.release__eyebrow {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.4rem;
+		margin: 0 0 0.75rem;
+		padding: 0 0 1rem;
+	}
+
+	.release h2 {
+		margin: 0 0 0.4rem;
+		font-size: 1.6rem;
+	}
+
+	.release h3 {
+		margin: 0 0 0.4rem;
+		font-size: 1.25rem;
+	}
+
+	.release p {
+		margin: 0;
+		color: var(--etj-muted);
+	}
+
+	.release__description {
+		font-size: 0.95rem;
+	}
+
+	.platforms {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		margin: 1rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.platform {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.35rem;
+		padding: 0.22rem 0.6rem;
+		border: 1px solid var(--etj-border);
+		border-radius: 999px;
+		background: var(--etj-surface-2);
+		font-size: 0.76rem;
+		line-height: 1.5;
+	}
+
+	.platform__name {
+		color: var(--etj-fg-strong);
+		font-weight: 600;
+	}
+
+	.platform__arch {
+		color: var(--etj-muted);
+		font-family: var(--etj-font-mono);
+		font-size: 0.72rem;
+	}
+
+	.release .release__meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 0.75rem;
+		margin-top: 0.9rem;
+		font-family: var(--etj-font-mono);
+		font-size: 0.76rem;
+		color: var(--etj-muted);
+	}
+
+	.release__build {
+		color: var(--etj-accent);
+	}
+
+	.release__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+		margin-top: 1.25rem;
+	}
+
+	.release .release__link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3rem;
+		margin-top: 0.9rem;
+		color: var(--etj-muted);
+		font-size: 0.85rem;
+	}
+
+	.release .release__link:hover {
+		color: var(--etj-fg-strong);
+	}
+
+	.release .release__unavailable {
+		margin-top: 0.9rem;
+		font-size: 0.9rem;
+	}
+
+	.section {
+		margin-top: clamp(3.5rem, 8vw, 6rem);
+	}
+
+	.section-head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: end;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.section-head h2 {
+		margin: 0 0 0.25rem;
+	}
+
+	.section-head p {
+		max-width: 44rem;
+		margin: 0;
+		color: var(--etj-muted);
+	}
+
+	.section-head > a {
+		color: var(--etj-muted);
+		font-size: 0.9rem;
+	}
+
+	.section-head > a:hover {
+		color: var(--etj-fg-strong);
+	}
+
+	.other-releases {
+		display: grid;
+		grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+		gap: 1rem;
+		align-items: stretch;
+	}
+
+	.release-picker {
+		display: grid;
+		gap: 0.5rem;
+		align-content: start;
+		padding: 1.5rem;
+		border: 1px solid var(--etj-border);
+		border-radius: var(--etj-radius);
+		background: var(--etj-surface);
+	}
+
+	.release-picker__head {
+		margin-bottom: 0.5rem;
+	}
+
+	.release-picker__head h3 {
+		margin: 0 0 0.25rem;
+	}
+
+	.release-picker__head p {
+		margin: 0;
+		color: var(--etj-muted);
+		font-size: 0.9rem;
+	}
+
+	.release-picker label {
+		color: var(--etj-muted);
+		font-size: 0.76rem;
+		font-weight: 600;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+	}
+
+	.release-picker__controls {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+	}
+
+	.release-picker select {
+		flex: 1 1 18rem;
+		min-width: 0;
+		padding: 0.55rem 0.75rem;
+		border: 1px solid var(--etj-border);
+		border-radius: var(--etj-radius);
+		background: var(--etj-bg);
+		color: var(--etj-fg);
+		font: inherit;
+		font-size: 0.95rem;
+	}
+
+	.release-picker select:hover {
+		border-color: var(--etj-border-strong);
+	}
+
+	.release-picker__meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 0.75rem;
+		margin: 0;
+		color: var(--etj-muted);
+		font-size: 0.82rem;
+	}
+
+	.engine-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1rem;
+	}
+
+	.engine-card {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.engine-card__head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.engine-card__icon {
+		display: inline-flex;
+		color: var(--etj-accent);
+	}
+
+	.engine-card h3 {
+		margin: 0 0 0.35rem;
+	}
+
+	.engine-card p {
+		margin: 0;
+	}
+
+	.engine-card--pending {
+		border-style: dashed;
+	}
+
+	.engine-card__link,
+	.engine-card__pending {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3rem;
+		margin-top: auto;
+		padding-top: 0.9rem;
+		font-size: 0.82rem;
+	}
+
+	.engine-card__link {
+		color: var(--etj-accent);
+	}
+
+	.engine-card:hover .engine-card__link {
+		color: var(--etj-accent-hover);
+	}
+
+	.engine-card__pending {
+		color: var(--etj-muted);
+		font-family: var(--etj-font-mono);
+	}
+
+	.download-help {
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--etj-border);
+	}
+
+	.download-help p {
+		margin: 0;
+		color: var(--etj-muted);
+		font-size: 0.9rem;
+	}
+
+	@media (max-width: 60rem) {
+		.release--banner {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.release__side {
+			align-items: flex-start;
+		}
+
+		.other-releases {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+
+	@media (max-width: 48rem) {
+		.engine-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>
