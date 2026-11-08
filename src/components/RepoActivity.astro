@@ -29,6 +29,7 @@ const repoUrl = `https://github.com/${repo}`;
 		commit: {
 			message: string;
 			author: { name: string; date: string } | null;
+			committer: { name: string; date: string } | null;
 		};
 		author: { login: string } | null;
 	}
@@ -90,8 +91,11 @@ const repoUrl = `https://github.com/${repo}`;
 			author.textContent = commit.author?.login ?? commit.commit.author?.name ?? 'unknown';
 
 			const when = document.createElement('time');
-			when.dateTime = commit.commit.author?.date ?? '';
-			when.textContent = timeAgo(commit.commit.author?.date);
+			// Committer date, not author date: merges and rebases keep the
+			// original authorship time but land on the branch later.
+			const committedAt = commit.commit.committer?.date ?? commit.commit.author?.date;
+			when.dateTime = committedAt ?? '';
+			when.textContent = timeAgo(committedAt);
 
 			meta.append(sha, author, when);
 			link.append(message, meta);
