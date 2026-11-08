@@ -23,12 +23,6 @@ html {
 	scroll-padding-top: calc(var(--etj-header-height) + 0.75rem);
 }
 
-@media (max-width: 640px) {
-	html {
-		scroll-padding-top: 6rem;
-	}
-}
-
 html[data-theme='light'] {
 	color-scheme: light;
 }

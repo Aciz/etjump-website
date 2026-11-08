@@ -11,7 +11,7 @@ import ThemeToggle from './ThemeToggle.astro';
 			{SITE_TITLE}
 		</a>
 
-		<div class="links">
+		<div class="links" id="site-menu">
 			<HeaderLink href="/downloads">Downloads</HeaderLink>
 			<HeaderLink href="/news">News</HeaderLink>
 			<HeaderLink href="/tutorials">Tutorials</HeaderLink>
@@ -28,6 +28,21 @@ import ThemeToggle from './ThemeToggle.astro';
 				<BrandIcon name="discord" />
 			</a>
 			<ThemeToggle />
+			<button
+				class="menu-toggle"
+				type="button"
+				aria-label="Toggle menu"
+				aria-expanded="false"
+				aria-controls="site-menu"
+				data-menu-toggle
+			>
+				<svg class="menu-icon menu-icon--open" viewBox="0 0 24 24" aria-hidden="true">
+					<path d="M4 7h16M4 12h16M4 17h16"></path>
+				</svg>
+				<svg class="menu-icon menu-icon--close" viewBox="0 0 24 24" aria-hidden="true">
+					<path d="m6 6 12 12M18 6 6 18"></path>
+				</svg>
+			</button>
 		</div>
 	</nav>
 </header>
@@ -38,6 +53,41 @@ import ThemeToggle from './ThemeToggle.astro';
 
 	updateHeader();
 	window.addEventListener('scroll', updateHeader, { passive: true });
+
+	const menuToggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+	const menu = document.getElementById('site-menu');
+
+	if (header && menuToggle && menu) {
+		const setMenuOpen = (open: boolean) => {
+			header.toggleAttribute('data-menu-open', open);
+			menuToggle.setAttribute('aria-expanded', String(open));
+		};
+
+		menuToggle.addEventListener('click', () => {
+			setMenuOpen(!header.hasAttribute('data-menu-open'));
+		});
+
+		menu.addEventListener('click', (event) => {
+			if ((event.target as Element).closest('a')) setMenuOpen(false);
+		});
+
+		document.addEventListener('click', (event) => {
+			if (header.hasAttribute('data-menu-open') && !header.contains(event.target as Node)) {
+				setMenuOpen(false);
+			}
+		});
+
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && header.hasAttribute('data-menu-open')) {
+				setMenuOpen(false);
+				menuToggle.focus();
+			}
+		});
+
+		window.addEventListener('resize', () => {
+			if (window.matchMedia('(min-width: 50rem)').matches) setMenuOpen(false);
+		});
+	}
 </script>
 
 <style>
@@ -64,6 +114,7 @@ import ThemeToggle from './ThemeToggle.astro';
 	}
 
 	nav {
+		position: relative;
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
@@ -114,6 +165,46 @@ import ThemeToggle from './ThemeToggle.astro';
 		color: var(--etj-fg-strong);
 	}
 
+	.menu-toggle {
+		display: none;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		padding: 0;
+		border: 1px solid var(--etj-border);
+		border-radius: var(--etj-radius);
+		background: transparent;
+		color: var(--etj-muted);
+		cursor: pointer;
+	}
+
+	.menu-toggle:hover {
+		border-color: var(--etj-accent);
+		color: var(--etj-fg-strong);
+	}
+
+	.menu-icon {
+		width: 1rem;
+		height: 1rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: round;
+	}
+
+	.menu-icon--close {
+		display: none;
+	}
+
+	header[data-menu-open] .menu-icon--open {
+		display: none;
+	}
+
+	header[data-menu-open] .menu-icon--close {
+		display: block;
+	}
+
 	:global(.links a) {
 		padding: 0.35rem 0.6rem;
 		border-radius: var(--etj-radius-sm);
@@ -132,12 +223,10 @@ import ThemeToggle from './ThemeToggle.astro';
 		background: var(--etj-surface);
 	}
 
-	@media (max-width: 640px) {
+	@media (max-width: 50rem) {
 		nav {
 			grid-template-columns: 1fr auto;
-			grid-template-areas:
-				'brand actions'
-				'links links';
+			grid-template-areas: 'brand actions';
 			display: grid;
 			gap: 0.35rem 1rem;
 			padding-block: 0.6rem;
@@ -153,19 +242,39 @@ import ThemeToggle from './ThemeToggle.astro';
 		}
 
 		.links {
-			grid-area: links;
-			overflow-x: auto;
+			display: none;
+			position: absolute;
+			top: 100%;
+			left: 0;
+			right: 0;
+			flex-direction: column;
 			flex-wrap: nowrap;
-			padding-bottom: 0.15rem;
-			scrollbar-width: none;
+			gap: 0.15rem;
+			padding: 0.5rem;
+			border: 1px solid var(--etj-border);
+			border-top: 0;
+			border-radius: 0 0 var(--etj-radius) var(--etj-radius);
+			background: var(--etj-surface-2);
+			box-shadow: 0 10px 24px rgb(0 0 0 / 0.25);
 		}
 
-		.links::-webkit-scrollbar {
-			display: none;
+		header[data-menu-open] .links {
+			display: flex;
 		}
 
-		.actions .external {
-			display: none;
+		:global(html[data-theme='light']) .links {
+			box-shadow: 0 10px 24px rgb(0 0 0 / 0.12);
+		}
+
+		:global(.links a) {
+			display: grid;
+			width: 100%;
+			padding: 0.55rem 0.6rem;
+			font-size: 0.95rem;
+		}
+
+		.menu-toggle {
+			display: inline-flex;
 		}
 	}
 </style>
