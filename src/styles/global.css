@@ -20,6 +20,13 @@ html {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	scroll-behavior: smooth;
+	scroll-padding-top: calc(var(--etj-header-height) + 0.75rem);
+}
+
+@media (max-width: 640px) {
+	html {
+		scroll-padding-top: 6rem;
+	}
 }
 
 html[data-theme='light'] {

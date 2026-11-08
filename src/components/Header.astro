@@ -1,5 +1,6 @@
 ---
 import { DISCORD_URL, GITHUB_URL, SITE_TITLE } from '../consts';
+import BrandIcon from './BrandIcon.astro';
 import HeaderLink from './HeaderLink.astro';
 import ThemeToggle from './ThemeToggle.astro';
 ---
@@ -20,22 +21,46 @@ import ThemeToggle from './ThemeToggle.astro';
 		</div>
 
 		<div class="actions">
-			<a class="external" href={GITHUB_URL}>
-				GitHub
+			<a class="external" href={GITHUB_URL} aria-label="GitHub" title="GitHub">
+				<BrandIcon name="github" />
 			</a>
-			<a class="external" href={DISCORD_URL}>
-				Discord
+			<a class="external" href={DISCORD_URL} aria-label="Discord" title="Discord">
+				<BrandIcon name="discord" />
 			</a>
 			<ThemeToggle />
 		</div>
 	</nav>
 </header>
 
+<script>
+	const header = document.querySelector('header');
+	const updateHeader = () => header?.classList.toggle('is-scrolled', window.scrollY > 8);
+
+	updateHeader();
+	window.addEventListener('scroll', updateHeader, { passive: true });
+</script>
+
 <style>
 	header {
+		position: sticky;
+		top: 0;
+		z-index: 50;
 		min-height: var(--etj-header-height);
 		border-bottom: 1px solid var(--etj-border);
 		background: var(--etj-surface-2);
+		transition: background-color 180ms ease;
+	}
+
+	header.is-scrolled {
+		background-color: color-mix(in srgb, var(--etj-surface-2) 82%, transparent);
+		-webkit-backdrop-filter: blur(10px) saturate(1.1);
+		backdrop-filter: blur(10px) saturate(1.1);
+	}
+
+	@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+		header.is-scrolled {
+			background-color: var(--etj-surface-2);
+		}
 	}
 
 	nav {
@@ -74,12 +99,18 @@ import ThemeToggle from './ThemeToggle.astro';
 	}
 
 	.actions a {
-		font-size: 0.85rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		border-radius: var(--etj-radius-sm);
 		color: var(--etj-muted);
 		text-decoration: none;
 	}
 
 	.actions a:hover {
+		background: var(--etj-surface-hover);
 		color: var(--etj-fg-strong);
 	}
 
