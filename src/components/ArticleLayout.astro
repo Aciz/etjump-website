@@ -136,7 +136,8 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 
 	.article-toc {
 		position: sticky;
-		top: calc(var(--etj-header-height) + 1.5rem);
+		/* Header token plus its 1px bottom border, matching the TOC's resting offset. */
+		top: calc(var(--etj-header-height) + 3rem + 1px);
 		font-size: 0.8125rem;
 		line-height: 1.25;
 	}
