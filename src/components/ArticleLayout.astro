@@ -214,82 +214,33 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 	}
 
 	.article-toc li a {
-		position: relative;
 		display: block;
-		isolation: isolate;
 		margin-inline-start: 0.35rem;
 		padding: 0.25rem 0.5rem 0.25rem 0.85rem;
 		border-inline-start: 1px solid var(--etj-border);
-		border-radius: 0;
 		color: var(--etj-muted);
 		font-size: 0.8125rem;
 		line-height: 1.25;
 		text-decoration: none;
 		transition:
-			color 300ms ease,
-			border-color 300ms ease,
-			font-weight 300ms ease;
+			color 150ms ease,
+			border-color 150ms ease;
 	}
 
 	.article-toc .depth-3 a {
 		padding-left: 1.85rem;
 	}
 
-	.article-toc li a::before {
-		content: '';
-		position: absolute;
-		left: 0;
-		top: 50%;
-		width: 0;
-		height: 0;
-		border-top: 0 solid transparent;
-		border-bottom: 0 solid transparent;
-		border-left: 0 solid var(--etj-accent);
-		transform: translateY(-50%);
-		transition: border-width 300ms ease-in-out;
+	.article-toc li a:hover,
+	.article-toc li a:focus-visible {
+		border-color: var(--etj-border-strong);
+		color: var(--etj-fg-strong);
 	}
 
 	.article-toc li a[aria-current='true'] {
-		display: block;
-		width: fit-content;
 		border-color: var(--etj-accent);
 		color: var(--etj-accent-hover);
-		font-weight: 700;
-	}
-
-	.article-toc li a[aria-current='true']::before {
-		border-top-width: 12px;
-		border-bottom-width: 12px;
-		border-left-width: 9px;
-	}
-
-	.article-toc li a[aria-current='true']::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		z-index: -1;
-		border-radius: 0.45rem;
-		background: linear-gradient(90deg, color-mix(in srgb, var(--etj-accent) 15%, transparent) 0%, transparent 100%);
-		box-shadow: 0 0 8px color-mix(in srgb, var(--etj-accent) 30%, transparent);
-	}
-
-	.article-toc li a:not([aria-current='true']):hover,
-	.article-toc li a:not([aria-current='true']):focus-visible {
-		border-color: transparent;
-		color: var(--etj-accent-hover);
 		font-weight: 600;
-		transition: none;
-	}
-
-	.article-toc li a:not([aria-current='true']):hover::after,
-	.article-toc li a:not([aria-current='true']):focus-visible::after {
-		content: '';
-		position: absolute;
-		inset-block: 0;
-		left: -1px;
-		width: 3px;
-		border-radius: 0 0.5rem 0.5rem 0;
-		background: var(--etj-accent);
 	}
 
 	@media (max-width: 74rem) {
