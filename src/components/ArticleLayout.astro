@@ -224,6 +224,7 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 	}
 
 	const backToTop = document.querySelector<HTMLButtonElement>('[data-back-to-top]');
+	const footer = document.querySelector('footer');
 
 	if (backToTop) {
 		const updateBackToTop = () => {
@@ -233,6 +234,11 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 			if (target) {
 				const right = document.documentElement.clientWidth - target.getBoundingClientRect().right;
 				backToTop.style.right = `${Math.max(0, right)}px`;
+			}
+
+			if (footer) {
+				const footerTop = footer.getBoundingClientRect().top;
+				backToTop.style.bottom = footerTop < window.innerHeight ? `${window.innerHeight - footerTop + 24}px` : '';
 			}
 
 			backToTop.classList.toggle('is-visible', window.scrollY > 600);
