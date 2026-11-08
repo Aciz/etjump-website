@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page not found" description="The page you were looking for does not exist.">
+	<section class="not-found">
+		<div class="not-found__grid" aria-hidden="true"></div>
+
+		<div class="not-found__inner">
+			<p class="not-found__code" aria-hidden="true">
+				404
+			</p>
+			<div class="not-found__rule" aria-hidden="true"></div>
+
+			<h1>This page was not found.</h1>
+			<p class="lede">
+				The page you were looking for does not exist. If you followed a link from the old site, the URL may have changed
+				- the content should still be available somewhere.
+			</p>
+
+			<a class="button" href="/">
+				Back to home
+			</a>
+		</div>
+	</section>
+</BaseLayout>
+
+<style>
+	.not-found {
+		position: relative;
+		overflow: hidden;
+		padding: clamp(3.5rem, 9vw, 6.5rem) 1.5rem;
+		border: 1px solid var(--etj-border);
+		border-radius: var(--etj-radius);
+		background:
+			radial-gradient(circle at 50% -20%, color-mix(in srgb, var(--etj-accent) 18%, transparent), transparent 60%),
+			linear-gradient(180deg, var(--etj-surface), var(--etj-bg));
+		text-align: center;
+	}
+
+	.not-found__grid {
+		position: absolute;
+		inset: 0;
+		background-image:
+			linear-gradient(color-mix(in srgb, var(--etj-fg) 5%, transparent) 1px, transparent 1px),
+			linear-gradient(90deg, color-mix(in srgb, var(--etj-fg) 5%, transparent) 1px, transparent 1px);
+		background-size: 3rem 3rem;
+		mask-image: radial-gradient(ellipse 60% 70% at 50% 40%, black, transparent 100%);
+		pointer-events: none;
+	}
+
+	.not-found__inner {
+		position: relative;
+		max-width: 42rem;
+		margin-inline: auto;
+	}
+
+	.not-found__code {
+		margin: 0;
+		color: var(--etj-fg-strong);
+		font-family: var(--etj-font-display);
+		font-stretch: var(--etj-display-stretch);
+		font-weight: var(--etj-display-weight);
+		font-size: clamp(6rem, 16vw, 10rem);
+		letter-spacing: -0.02em;
+		line-height: 0.8;
+	}
+
+	.not-found__rule {
+		width: 6rem;
+		height: 4px;
+		margin: 1.75rem auto 1.75rem;
+		background: linear-gradient(90deg, transparent, var(--etj-accent), transparent);
+	}
+
+	.not-found h1 {
+		margin: 0 0 0.75rem;
+		font-size: clamp(1.8rem, 4vw, 2.5rem);
+	}
+
+	.not-found .lede {
+		max-width: 34rem;
+		margin: 0 auto 2rem;
+	}
+</style>

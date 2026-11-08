@@ -16,6 +16,7 @@ export default defineConfig({
 			description: 'Documentation for ETJump, a trickjump modification for Wolfenstein: Enemy Territory.',
 			plugins: [starlightThemeGalaxy()],
 			customCss: ['./src/styles/tokens.css', './src/styles/starlight.css'],
+			disable404Route: true,
 			social: [
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/etjump/etjump' },
 				{ icon: 'discord', label: 'Discord', href: 'https://discord.gg/AcyWMqR' },
