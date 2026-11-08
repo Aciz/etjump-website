@@ -17,6 +17,13 @@ export default defineConfig({
 			plugins: [starlightThemeGalaxy()],
 			customCss: ['./src/styles/tokens.css', './src/styles/starlight.css'],
 			disable404Route: true,
+			// Keep the placeholder docs out of search results until they are migrated.
+			head: [
+				{
+					tag: 'meta',
+					attrs: { name: 'robots', content: 'noindex' },
+				},
+			],
 			// Docs header: site nav on desktop, native compact header on mobile.
 			components: {
 				Header: './src/components/DocsHeader.astro',
@@ -60,6 +67,12 @@ export default defineConfig({
 			],
 		}),
 		mdx(),
-		sitemap(),
+		sitemap({
+			// Placeholder docs and the design-system preview stay out of the sitemap.
+			filter: (page) => {
+				const path = new URL(page).pathname;
+				return !path.startsWith('/docs') && !path.startsWith('/design');
+			},
+		}),
 	],
 });
