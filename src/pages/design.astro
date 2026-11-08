@@ -1,6 +1,7 @@
 ---
 import { Code } from 'astro:components';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Aside from '../components/Aside.astro';
 
 const cvarSample = `// Draw the ETJump speed meter.
 // 1 = current speed, 2 = speed and max speed, 9 = tens only.
@@ -70,24 +71,20 @@ const entitySample = `{
 	</div>
 
 	<h2>Asides</h2>
-	<div class="aside">
-		<p class="aside-title">Note</p>
+	<Aside>
 		<p>ETJump requires the original Enemy Territory assets. The mod itself is a client-side package.</p>
-	</div>
-	<div class="aside tip">
-		<p class="aside-title">Tip</p>
+	</Aside>
+	<Aside type="tip">
 		<p>
 			Bind <code>etj_drawSpeed2</code> to a key while learning strafe movement.
 		</p>
-	</div>
-	<div class="aside caution">
-		<p class="aside-title">Caution</p>
+	</Aside>
+	<Aside type="caution">
 		<p>Timerun records are stored by the server. Changing servers does not carry your personal bests over.</p>
-	</div>
-	<div class="aside danger">
-		<p class="aside-title">Warning</p>
+	</Aside>
+	<Aside type="danger" title="Warning">
 		<p>Removing a record is permanent unless the server keeps an archive.</p>
-	</div>
+	</Aside>
 
 	<h2>Prose</h2>
 	<p>

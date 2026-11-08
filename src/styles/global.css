@@ -212,7 +212,7 @@ th code {
 }
 
 .section-head h2 {
-	margin: 0 0 0.25rem;
+	margin: 0 0 0.6rem;
 }
 
 .section-head p {
@@ -352,13 +352,30 @@ a.card:hover {
 	color: var(--etj-danger);
 }
 
+/* -------------------------------------------------------------- asides ---- */
+
 .aside {
+	--aside-accent: var(--etj-info);
+
+	position: relative;
 	margin: 1.5rem 0;
-	padding: 0.9rem 1.1rem;
-	border: 1px solid var(--etj-border);
-	border-left: 3px solid var(--etj-info);
-	border-radius: var(--etj-radius-sm);
-	background: color-mix(in srgb, var(--etj-info) 7%, var(--etj-surface));
+	padding: 0.875rem 1.125rem;
+	border: 1px solid color-mix(in srgb, var(--aside-accent) 25%, transparent);
+	border-left: 3px solid var(--aside-accent);
+	border-radius: var(--etj-radius);
+	background: color-mix(in srgb, var(--aside-accent) 8%, var(--etj-bg));
+	box-shadow: 0 2px 8px rgb(0 0 0 / 0.2);
+	overflow: hidden;
+}
+
+/* Faint accent glow across the top edge, like the docs theme. */
+.aside::before {
+	content: '';
+	position: absolute;
+	inset: 0 0 auto;
+	height: 1px;
+	background: linear-gradient(90deg, transparent, var(--aside-accent), transparent);
+	opacity: 0.6;
 }
 
 .aside > :first-child {
@@ -370,24 +387,75 @@ a.card:hover {
 }
 
 .aside-title {
-	font-weight: 600;
-	color: var(--etj-fg-strong);
-	margin-bottom: 0.25rem;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin: 0 0 0.75rem;
+	color: var(--aside-accent);
+	font-size: 0.9rem;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	line-height: 1.4;
+	text-transform: uppercase;
+}
+
+/* Fading rule that runs from the title to the right edge. */
+.aside-title::after {
+	content: '';
+	flex-grow: 1;
+	height: 1px;
+	margin-left: 0.75rem;
+	background: linear-gradient(90deg, var(--aside-accent), transparent);
+	opacity: 0.3;
+}
+
+.aside-icon {
+	flex-shrink: 0;
+}
+
+.aside a {
+	color: var(--aside-accent);
+	text-decoration-color: transparent;
+	text-underline-offset: 0.2em;
+}
+
+.aside a:hover {
+	color: var(--aside-accent);
+	text-decoration-color: var(--aside-accent);
+	text-decoration-thickness: 2px;
+}
+
+.aside code {
+	background: color-mix(in srgb, var(--aside-accent) 10%, var(--etj-surface));
+	border-color: color-mix(in srgb, var(--aside-accent) 22%, transparent);
+}
+
+.aside pre {
+	background: color-mix(in srgb, var(--aside-accent) 6%, var(--etj-code-bg));
+	border-color: color-mix(in srgb, var(--aside-accent) 22%, transparent);
+}
+
+.aside pre code {
+	padding: 0;
+	border: 0;
+	background: transparent;
 }
 
 .aside.tip {
-	border-left-color: var(--etj-success);
-	background: color-mix(in srgb, var(--etj-success) 7%, var(--etj-surface));
+	--aside-accent: var(--etj-success);
 }
 
 .aside.caution {
-	border-left-color: var(--etj-warning);
-	background: color-mix(in srgb, var(--etj-warning) 7%, var(--etj-surface));
+	--aside-accent: var(--etj-warning);
 }
 
 .aside.danger {
-	border-left-color: var(--etj-danger);
-	background: color-mix(in srgb, var(--etj-danger) 7%, var(--etj-surface));
+	--aside-accent: var(--etj-danger);
+}
+
+:root[data-theme='light'] .aside {
+	background: color-mix(in srgb, var(--aside-accent) 5%, var(--etj-bg));
+	box-shadow: 0 2px 8px rgb(0 0 0 / 0.06);
 }
 
 /* ------------------------------------------------------------- inputs ---- */
