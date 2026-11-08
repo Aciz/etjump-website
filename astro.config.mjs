@@ -17,6 +17,10 @@ export default defineConfig({
 			plugins: [starlightThemeGalaxy()],
 			customCss: ['./src/styles/tokens.css', './src/styles/starlight.css'],
 			disable404Route: true,
+			// Docs header: site nav on desktop, native compact header on mobile.
+			components: {
+				Header: './src/components/DocsHeader.astro',
+			},
 			social: [
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/etjump/etjump' },
 				{ icon: 'discord', label: 'Discord', href: 'https://discord.gg/AcyWMqR' },

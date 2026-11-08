@@ -1,0 +1,130 @@
+---
+import { DISCORD_URL, GITHUB_URL } from '../consts';
+import BrandIcon from './BrandIcon.astro';
+import HeaderLink from './HeaderLink.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import Search from '@astrojs/starlight/components/Search.astro';
+import ProgressScroll from 'starlight-theme-galaxy/components/ProgressScroll.astro';
+---
+
+<div class="docs-header">
+	<a class="brand" href="/">
+		ETJump
+	</a>
+
+	<nav class="docs-nav" aria-label="Main">
+		<HeaderLink href="/downloads">Downloads</HeaderLink>
+		<HeaderLink href="/news">News</HeaderLink>
+		<HeaderLink href="/tutorials">Tutorials</HeaderLink>
+		<HeaderLink href="/tools">Tools</HeaderLink>
+		<HeaderLink href="/resources">Resources</HeaderLink>
+		<HeaderLink href="/docs">Documentation</HeaderLink>
+	</nav>
+
+	<div class="docs-actions">
+		<div class="docs-search">
+			<Search />
+		</div>
+
+		<a class="social" href={GITHUB_URL} aria-label="GitHub" title="GitHub">
+			<BrandIcon name="github" />
+		</a>
+		<a class="social" href={DISCORD_URL} aria-label="Discord" title="Discord">
+			<BrandIcon name="discord" />
+		</a>
+
+		<ThemeToggle />
+	</div>
+</div>
+
+<ProgressScroll />
+
+<style>
+	.docs-header {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		width: 100%;
+		height: 100%;
+		min-width: 0;
+	}
+
+	.brand {
+		flex-shrink: 0;
+		color: var(--etj-fg-strong);
+		font-family: var(--etj-font-display);
+		font-stretch: var(--etj-display-stretch);
+		font-weight: var(--etj-display-weight);
+		letter-spacing: var(--etj-display-tracking);
+		font-size: 1.05rem;
+		text-decoration: none;
+	}
+
+	.docs-nav {
+		display: flex;
+		gap: 0.15rem;
+	}
+
+	.docs-nav :global(a) {
+		padding: 0.35rem 0.6rem;
+		border-radius: var(--etj-radius-sm);
+		color: var(--etj-muted);
+		font-size: 0.9rem;
+		text-decoration: none;
+	}
+
+	.docs-nav :global(a:hover) {
+		background: var(--etj-surface-hover);
+		color: var(--etj-fg-strong);
+	}
+
+	.docs-nav :global(a.active) {
+		color: var(--etj-accent-hover);
+		background: var(--etj-surface);
+	}
+
+	.docs-actions {
+		display: flex;
+		align-items: center;
+		gap: 0.85rem;
+		margin-inline-start: auto;
+		min-width: 0;
+	}
+
+	.docs-search {
+		width: 100%;
+		max-width: 16rem;
+		min-width: 0;
+	}
+
+	.social {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		width: 2rem;
+		height: 2rem;
+		border-radius: var(--etj-radius-sm);
+		color: var(--etj-muted);
+		text-decoration: none;
+	}
+
+	.social:hover {
+		background: var(--etj-surface-hover);
+		color: var(--etj-fg-strong);
+	}
+
+	@media (max-width: 64rem) {
+		.docs-nav,
+		.social {
+			display: none;
+		}
+	}
+
+	@media (max-width: 50rem) {
+		.docs-search {
+			width: auto;
+			max-width: none;
+		}
+	}
+</style>
