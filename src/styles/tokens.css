@@ -21,6 +21,8 @@
 	/* Borders */
 	--etj-border: #262a31;
 	--etj-border-strong: #343a44;
+	/* Stronger divider for table rows and code frames that must read clearly. */
+	--etj-border-emphasis: #4a515c;
 
 	/* Text */
 	--etj-fg: #d0d0d5;
@@ -69,6 +71,7 @@
 
 	--etj-border: #e2e6ea;
 	--etj-border-strong: #cdd3da;
+	--etj-border-emphasis: #8a919c;
 
 	--etj-fg: #1b1e24;
 	--etj-fg-strong: #0b0d10;

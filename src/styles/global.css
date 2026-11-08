@@ -122,72 +122,177 @@ blockquote {
 
 /* --------------------------------------------------------------- code ---- */
 
-code {
+code:not(pre code) {
 	font-family: var(--etj-font-mono);
-	font-size: 0.85em;
-	padding: 0.12em 0.35em;
-	border-radius: var(--etj-radius-sm);
+	font-size: 0.785em;
+	font-weight: 500;
+	padding: 0.2em 0.4em;
+	margin-block: 0.125rem;
+	border-radius: 0.25rem;
 	background: var(--etj-inline-code-bg);
-	border: 1px solid var(--etj-border);
+	color: var(--etj-accent-hover);
+	border: 1px solid var(--etj-border-strong);
 }
 
-pre {
+/* Bare <pre> blocks only; Markdown fences are owned by Expressive Code. */
+pre:not(.expressive-code *) {
 	margin: 1.5rem 0;
-	padding: 1.1rem 1.25rem;
+	padding: 0.75rem 1rem;
 	border-radius: var(--etj-radius);
 	overflow-x: auto;
 	background: var(--etj-code-bg);
-	border: 1px solid var(--etj-border);
-	line-height: 1.55;
+	border: 1px solid var(--etj-border-emphasis);
+	line-height: 1.75;
 }
 
-pre > code {
+pre:not(.expressive-code *) > code {
 	all: unset;
 	font-family: var(--etj-font-mono);
-	font-size: 0.85rem;
+	font-size: 0.875rem;
+}
+
+/* Shiki dual-theme output: pick the syntax palette for the active site theme. */
+pre.astro-code {
+	background-color: var(--etj-code-bg);
+}
+
+pre.astro-code span {
+	color: var(--shiki-light);
+}
+
+:root[data-theme='dark'] pre.astro-code span {
+	color: var(--shiki-dark);
+}
+
+/* Expressive Code reads Galaxy's --fb-* variables, which Starlight only loads
+   on docs pages. Provide them at the root for main-site fences. */
+:root {
+	--fb-code-block-bg-color: var(--etj-code-bg);
+	--fb-ec-caption-bg-color: var(--etj-surface);
+	--fb-ec-caption-bb-color: var(--etj-border);
+	--fb-ec-language-color: var(--etj-muted);
+}
+
+/* Markdown fences use Expressive Code, which defaults its frame border to the
+   code background. Give it the same visible edge as the docs theme. */
+.expressive-code pre {
+	border: 1px solid var(--etj-border-emphasis);
 }
 
 /* -------------------------------------------------------------- tables ---- */
 
 table {
+	display: table;
 	width: 100%;
+	max-width: 100%;
+	overflow-x: auto;
 	border-collapse: separate;
 	border-spacing: 0;
-	border: 1px solid var(--etj-border);
-	border-radius: var(--etj-radius);
-	overflow: hidden;
 	margin: 1.5rem 0;
 	font-size: 0.95rem;
+	line-height: 1.6;
+	scrollbar-width: thin;
+	scrollbar-color: color-mix(in srgb, var(--etj-accent) 40%, transparent) transparent;
+}
+
+table::-webkit-scrollbar {
+	height: 6px;
+}
+
+table::-webkit-scrollbar-track {
+	background: color-mix(in srgb, var(--etj-border) 30%, transparent);
+	border-radius: 3px;
+}
+
+table::-webkit-scrollbar-thumb {
+	background: color-mix(in srgb, var(--etj-accent) 40%, transparent);
+	border-radius: 3px;
+}
+
+table::-webkit-scrollbar-thumb:hover {
+	background: color-mix(in srgb, var(--etj-accent) 60%, transparent);
 }
 
 th,
 td {
+	padding: 0.75rem 1rem;
+	border-bottom: 1px solid var(--etj-border-emphasis);
+	border-right: 1px solid color-mix(in srgb, var(--etj-fg) 8%, transparent);
 	text-align: left;
-	padding: 0.6rem 0.9rem;
-	border-bottom: 1px solid var(--etj-border);
-	vertical-align: top;
+	vertical-align: middle;
 }
 
-th {
-	background: var(--etj-surface-2);
-	color: var(--etj-muted);
-	font-size: 0.78rem;
+th:last-child,
+td:last-child {
+	border-right: 0;
+}
+
+thead th {
+	position: relative;
+	background: linear-gradient(
+		135deg,
+		color-mix(in srgb, var(--etj-accent-solid) 15%, transparent),
+		color-mix(in srgb, var(--etj-accent-solid) 8%, transparent)
+	);
+	color: var(--etj-fg-strong);
 	font-weight: 600;
-	text-transform: uppercase;
-	letter-spacing: 0.05em;
 }
 
-tbody tr:last-child td {
-	border-bottom: 0;
+/* Fading accent highlight under the header row, as in the docs theme. */
+thead th::after {
+	content: '';
+	position: absolute;
+	inset: auto 0 0;
+	height: 1px;
+	background: linear-gradient(
+		90deg,
+		transparent,
+		color-mix(in srgb, var(--etj-accent-solid) 30%, transparent),
+		transparent
+	);
+}
+
+tbody tr:nth-child(even) {
+	background: var(--etj-surface);
 }
 
 tbody tr:hover {
-	background: var(--etj-surface);
+	background: color-mix(in srgb, var(--etj-accent) 5%, transparent);
 }
 
 td code,
 th code {
 	white-space: nowrap;
+}
+
+:root[data-theme='light'] thead th {
+	background: linear-gradient(
+		135deg,
+		color-mix(in srgb, var(--etj-accent-solid) 12%, transparent),
+		color-mix(in srgb, var(--etj-accent-solid) 6%, transparent)
+	);
+}
+
+:root[data-theme='light'] tbody tr:nth-child(even) {
+	background: var(--etj-surface-2);
+}
+
+:root[data-theme='light'] tbody tr:hover {
+	background: color-mix(in srgb, var(--etj-accent) 8%, transparent);
+}
+
+@media (max-width: 50rem) {
+	table {
+		/* Docs-style scroll container for wide tables on small screens. */
+		display: block;
+		overflow-x: auto;
+		font-size: 0.875rem;
+	}
+
+	th,
+	td {
+		padding: 0.5rem 0.75rem;
+	}
 }
 
 /* --------------------------------------------------------- components ---- */
@@ -427,7 +532,8 @@ a.card:hover {
 
 .aside code {
 	background: color-mix(in srgb, var(--aside-accent) 10%, var(--etj-surface));
-	border-color: color-mix(in srgb, var(--aside-accent) 22%, transparent);
+	border: 1px solid color-mix(in srgb, var(--aside-accent) 22%, transparent);
+	color: var(--etj-fg);
 }
 
 .aside pre {
