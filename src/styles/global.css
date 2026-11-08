@@ -384,7 +384,7 @@ a.card:hover {
 	gap: 0.4rem;
 	padding: 0.55rem 1rem;
 	border-radius: var(--etj-radius);
-	border: 1px solid var(--etj-accent-solid);
+	border: 1px solid color-mix(in srgb, var(--etj-accent-hover) 55%, var(--etj-accent-solid));
 	background: var(--etj-accent-solid);
 	color: var(--etj-accent-contrast);
 	font: inherit;
@@ -399,14 +399,14 @@ a.card:hover {
 
 .button:hover {
 	background: var(--etj-accent-solid-hover);
-	border-color: var(--etj-accent-solid-hover);
+	border-color: var(--etj-accent-hover);
 	color: var(--etj-accent-contrast);
 }
 
 .button.secondary {
 	background: transparent;
 	color: var(--etj-fg);
-	border-color: var(--etj-border);
+	border-color: var(--etj-border-emphasis);
 }
 
 .button.secondary:hover {
