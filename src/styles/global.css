@@ -63,6 +63,12 @@ h2 {
 	font-size: clamp(1.35rem, 2.5vw, 1.75rem);
 	font-weight: 600;
 	margin-top: 2.5em;
+	padding-bottom: 0.65rem;
+	/* Ported from the docs theme: a short accent bar under section headings. */
+	background-image: linear-gradient(90deg, var(--etj-accent-solid), transparent);
+	background-repeat: no-repeat;
+	background-position: left bottom;
+	background-size: 14rem 3px;
 }
 
 h3 {
