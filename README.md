@@ -96,6 +96,6 @@ license texts are in [`THIRD_PARTY_LICENSES.md`](THIRD_PARTY_LICENSES.md).
 - [x] Proper downloads page
 - [ ] Migrate documentation from Read the Docs
 - [x] Settle the color palette and general redesign
-- [ ] Override the Starlight header so `/docs` uses the site navigation
+- [x] Override the Starlight header so `/docs` uses the site navigation
 - [x] Port over starlight's component themes to the website
 - [ ] Deploy and sunset the old site
