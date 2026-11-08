@@ -88,10 +88,10 @@ TODO
 - [x] `/design` style tile for evaluating the visual system
 - [x] Tutorials ported over to new site
 - [x] Overbounce calculator working
-- [ ] Proper home page
-- [ ] Proper downloads page
+- [x] Proper home page
+- [x] Proper downloads page
 - [ ] Migrate documentation from Read the Docs
 - [x] Settle the color palette and general redesign
 - [ ] Override the Starlight header so `/docs` uses the site navigation
-- [ ] Port over starlight's component themes to the website
+- [x] Port over starlight's component themes to the website
 - [ ] Deploy and sunset the old site
