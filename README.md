@@ -70,9 +70,8 @@ The docs use `starlight-theme-galaxy`, which provides the layout and component d
 the project's custom CSS, so `src/styles/starlight.css` overrides its palette without touching its components.
 
 The site and `/docs` share one set of colors, fonts and radii through `src/styles/tokens.css` (`Inter` +
-`JetBrains Mono`, temporary Galaxy-derived palette). The color palette is temporary and will be updated in the future.
-The theme toggle writes to the same `localStorage` key Starlight uses (`starlight-theme`), so the choice carries between
-the main site and the docs.
+`JetBrains Mono`, with `Saira` for display type). The theme toggle writes to the same `localStorage` key Starlight uses
+(`starlight-theme`), so the choice carries between the main site and the docs.
 
 `/design` is a style-tile page showing buttons, cards, badges, asides, prose, tables, code and inputs. Use it to
 evaluate palette changes before applying them elsewhere.
@@ -80,6 +79,11 @@ evaluate palette changes before applying them elsewhere.
 ## Deployment
 
 TODO
+
+## Licenses
+
+The site source is licensed under the BSD 3-Clause License; see [`LICENSE`](LICENSE). Third-party notices and full
+license texts are in [`THIRD_PARTY_LICENSES.md`](THIRD_PARTY_LICENSES.md).
 
 ## Current state
 
