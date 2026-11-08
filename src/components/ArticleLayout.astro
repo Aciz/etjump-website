@@ -32,6 +32,24 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 			<p class="lede">{description}</p>
 		</header>
 
+		{toc.length > 0 && (
+			<details class="article-toc-mobile" data-mobile-toc>
+				<summary>
+					<span class="article-toc-mobile__label">On this page</span>
+					<span class="article-toc-mobile__current" data-toc-current></span>
+				</summary>
+				<nav aria-label="On this page">
+					<ul>
+						{toc.map((heading) => (
+							<li class={`depth-${heading.depth}`}>
+								<a href={`#${heading.slug}`}>{heading.text}</a>
+							</li>
+						))}
+					</ul>
+				</nav>
+			</details>
+		)}
+
 		<div class="prose">
 			<slot />
 		</div>
@@ -55,6 +73,7 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 
 <script>
 	const toc = document.querySelector<HTMLElement>('.article-toc');
+	const mobileToc = document.querySelector<HTMLDetailsElement>('.article-toc-mobile');
 	const progressEl = document.querySelector<HTMLElement>('.article-progress');
 	const progressBar = progressEl?.querySelector<HTMLElement>('[data-article-progress]');
 	const header = document.querySelector<HTMLElement>('header');
@@ -72,38 +91,77 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 		progressBar.style.transform = `scaleX(${ratio})`;
 	};
 
-	if (toc) {
-		const entries = [...toc.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')]
-			.map((link) => {
-				const heading = document.getElementById(decodeURIComponent(link.hash.slice(1)));
-				return heading ? { link, heading } : null;
-			})
-			.filter((entry): entry is { link: HTMLAnchorElement; heading: HTMLElement } => entry !== null);
+	if (toc || mobileToc) {
+		const links = [
+			...document.querySelectorAll<HTMLAnchorElement>('.article-toc a[href^="#"]'),
+			...document.querySelectorAll<HTMLAnchorElement>('.article-toc-mobile a[href^="#"]'),
+		];
 
-		let current: HTMLAnchorElement | null = null;
+		const entries = new Map<string, { heading: HTMLElement; links: HTMLAnchorElement[] }>();
+
+		for (const link of links) {
+			const id = decodeURIComponent(link.hash.slice(1));
+			const heading = document.getElementById(id);
+			if (!heading) continue;
+
+			const entry = entries.get(id) ?? { heading, links: [] };
+			entry.links.push(link);
+			entries.set(id, entry);
+		}
+
+		const ordered = [...entries.values()];
+		const currentLabel = document.querySelector<HTMLElement>('[data-toc-current]');
+		let current: HTMLElement | null = null;
 
 		const update = () => {
 			const offset = (header?.getBoundingClientRect().height ?? 0) + 32;
 			let active: HTMLElement | null = null;
 
-			for (const entry of entries) {
+			for (const entry of ordered) {
 				if (entry.heading.getBoundingClientRect().top <= offset) active = entry.heading;
 				else break;
 			}
 
 			if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
-				active = entries.at(-1)?.heading ?? active;
+				active = ordered.at(-1)?.heading ?? active;
 			}
 
-			const next = active ? (entries.find((entry) => entry.heading === active)?.link ?? null) : null;
-			if (next !== current) {
-				if (current) current.removeAttribute('aria-current');
-				if (next) next.setAttribute('aria-current', 'true');
-				current = next;
+			if (active !== current) {
+				for (const entry of ordered) {
+					for (const link of entry.links) {
+						if (entry.heading === active) link.setAttribute('aria-current', 'true');
+						else link.removeAttribute('aria-current');
+					}
+				}
+
+				if (currentLabel) currentLabel.textContent = active?.textContent ?? '';
+				current = active;
 			}
 
 			updateProgress();
 		};
+
+		if (mobileToc) {
+			mobileToc.querySelectorAll('a').forEach((link) => {
+				link.addEventListener('click', () => {
+					mobileToc.open = false;
+				});
+			});
+
+			document.addEventListener('click', (event) => {
+				if (mobileToc.open && !mobileToc.contains(event.target as Node)) {
+					mobileToc.open = false;
+				}
+			});
+
+			document.addEventListener('keydown', (event) => {
+				if (event.key === 'Escape' && mobileToc.open) {
+					const hasFocus = mobileToc.contains(document.activeElement);
+					mobileToc.open = false;
+					if (hasFocus) mobileToc.querySelector('summary')?.focus();
+				}
+			});
+		}
 
 		let ticking = false;
 		const onScroll = () => {
@@ -153,6 +211,101 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 		transform: scaleX(0);
 		transform-origin: left;
 		will-change: transform;
+	}
+
+	.article-toc-mobile {
+		display: none;
+		position: sticky;
+		top: calc(var(--etj-header-height) + 3px);
+		z-index: 48;
+		margin: 0 0 2rem;
+		border: 1px solid var(--etj-border);
+		border-radius: var(--etj-radius);
+		background: var(--etj-surface);
+	}
+
+	.article-toc-mobile summary {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.65rem 0.9rem;
+		list-style: none;
+		color: var(--etj-fg-strong);
+		font-size: 0.9rem;
+		font-weight: 600;
+		cursor: pointer;
+	}
+
+	.article-toc-mobile summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.article-toc-mobile summary::after {
+		content: '';
+		flex-shrink: 0;
+		width: 0.45rem;
+		height: 0.45rem;
+		margin-left: auto;
+		border-right: 1.5px solid currentColor;
+		border-bottom: 1.5px solid currentColor;
+		transform: rotate(45deg);
+		transition: transform 150ms ease;
+	}
+
+	.article-toc-mobile[open] summary::after {
+		transform: rotate(-135deg);
+	}
+
+	.article-toc-mobile__label {
+		flex-shrink: 0;
+	}
+
+	.article-toc-mobile__current {
+		min-width: 0;
+		max-width: 55%;
+		overflow: hidden;
+		color: var(--etj-muted);
+		font-size: 0.82rem;
+		font-weight: 400;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	.article-toc-mobile nav {
+		max-height: calc(100dvh - var(--etj-header-height) - 4rem);
+		padding: 0 0.9rem 0.75rem;
+		border-top: 1px solid var(--etj-border);
+		overflow-y: auto;
+		overscroll-behavior: contain;
+	}
+
+	.article-toc-mobile ul {
+		list-style: none;
+		margin: 0;
+		padding: 0.5rem 0 0;
+	}
+
+	.article-toc-mobile li a {
+		display: block;
+		padding: 0.35rem 0 0.35rem 0.5rem;
+		border-left: 2px solid transparent;
+		color: var(--etj-muted);
+		font-size: 0.9rem;
+		text-decoration: none;
+	}
+
+	.article-toc-mobile li a:hover {
+		color: var(--etj-fg-strong);
+	}
+
+	.article-toc-mobile .depth-3 a {
+		padding-left: 1.25rem;
+	}
+
+	.article-toc-mobile li a[aria-current='true'] {
+		border-left-color: var(--etj-accent);
+		color: var(--etj-accent-hover);
+		font-weight: 600;
 	}
 
 	.article-layout {
@@ -250,6 +403,10 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 
 		.article-toc {
 			display: none;
+		}
+
+		.article-toc-mobile {
+			display: block;
 		}
 	}
 </style>
