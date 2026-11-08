@@ -79,6 +79,15 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 	</button>
 )}
 
+<dialog class="image-preview" data-image-preview aria-label="Image preview">
+	<button class="image-preview__close" type="button" aria-label="Close image preview" data-image-preview-close>
+		<svg viewBox="0 0 24 24" aria-hidden="true">
+			<path d="m6 6 12 12M18 6 6 18"></path>
+		</svg>
+	</button>
+	<img class="image-preview__image" data-image-preview-image alt="" />
+</dialog>
+
 <script>
 	const toc = document.querySelector<HTMLElement>('.article-toc');
 	const mobileToc = document.querySelector<HTMLDetailsElement>('.article-toc-mobile');
@@ -238,6 +247,57 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 		window.addEventListener('resize', updateBackToTop);
 		window.addEventListener('load', updateBackToTop);
 		updateBackToTop();
+	}
+
+	const imagePreview = document.querySelector<HTMLDialogElement>('[data-image-preview]');
+	const imagePreviewImage = imagePreview?.querySelector<HTMLImageElement>('[data-image-preview-image]');
+
+	if (imagePreview && imagePreviewImage) {
+		let lastTrigger: HTMLImageElement | null = null;
+
+		const openImagePreview = (image: HTMLImageElement) => {
+			lastTrigger = image;
+			imagePreviewImage.src = image.currentSrc || image.src;
+			imagePreviewImage.alt = image.alt;
+			imagePreview.setAttribute('aria-label', image.alt ? `Image preview: ${image.alt}` : 'Image preview');
+
+			if (!imagePreview.open) imagePreview.showModal();
+			document.body.style.overflow = 'hidden';
+		};
+
+		const closeImagePreview = () => {
+			if (imagePreview.open) imagePreview.close();
+			else imagePreview.removeAttribute('open');
+		};
+
+		document.querySelectorAll<HTMLImageElement>('.prose img').forEach((image) => {
+			if (image.closest('a')) return;
+
+			image.classList.add('is-zoomable');
+			image.tabIndex = 0;
+			image.setAttribute('role', 'button');
+			image.setAttribute('aria-label', image.alt ? `View image: ${image.alt}` : 'View image');
+
+			image.addEventListener('click', () => openImagePreview(image));
+			image.addEventListener('keydown', (event) => {
+				if (event.key === 'Enter' || event.key === ' ') {
+					event.preventDefault();
+					openImagePreview(image);
+				}
+			});
+		});
+
+		imagePreview.querySelector('[data-image-preview-close]')?.addEventListener('click', closeImagePreview);
+
+		imagePreview.addEventListener('click', (event) => {
+			if (event.target === imagePreview) closeImagePreview();
+		});
+
+		imagePreview.addEventListener('close', () => {
+			document.body.style.overflow = '';
+			imagePreviewImage.removeAttribute('src');
+			lastTrigger?.focus();
+		});
 	}
 </script>
 
@@ -438,6 +498,73 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 
 	.prose {
 		max-width: 52rem;
+	}
+
+	.prose :global(img.is-zoomable) {
+		cursor: zoom-in;
+	}
+
+	.prose :global(img.is-zoomable:focus-visible) {
+		outline: 2px solid var(--etj-accent);
+		outline-offset: 2px;
+	}
+
+	.image-preview {
+		max-width: 95vw;
+		max-height: 92vh;
+		padding: 0;
+		border: 1px solid var(--etj-border);
+		border-radius: var(--etj-radius);
+		background: var(--etj-surface-2);
+		color: var(--etj-fg);
+		overflow: hidden;
+	}
+
+	.image-preview::backdrop {
+		background: rgb(0 0 0 / 0.78);
+		backdrop-filter: blur(4px);
+	}
+
+	.image-preview__image {
+		display: block;
+		max-width: 95vw;
+		max-height: 90vh;
+		width: auto;
+		height: auto;
+		object-fit: contain;
+	}
+
+	.image-preview__close {
+		position: absolute;
+		top: 0.6rem;
+		right: 0.6rem;
+		z-index: 1;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		padding: 0;
+		border: 1px solid var(--etj-border);
+		border-radius: var(--etj-radius-sm);
+		background: color-mix(in srgb, var(--etj-surface-2) 85%, transparent);
+		backdrop-filter: blur(4px);
+		color: var(--etj-fg);
+		cursor: pointer;
+	}
+
+	.image-preview__close:hover {
+		border-color: var(--etj-accent);
+		color: var(--etj-fg-strong);
+	}
+
+	.image-preview__close svg {
+		width: 1rem;
+		height: 1rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: round;
 	}
 
 	.article-toc {
