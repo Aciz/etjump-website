@@ -1,5 +1,5 @@
 ---
-import { DISCORD_URL, DOCS_ARCHIVE_URL, GITHUB_URL } from '../consts';
+import { WEBSITE_SOURCE_URL } from '../consts';
 
 const year = new Date().getFullYear();
 ---
@@ -7,10 +7,9 @@ const year = new Date().getFullYear();
 <footer>
 	<div class="inner">
 		<p>&copy; {year} ETJump Team</p>
-		<p class="links">
-			<a href={GITHUB_URL}>GitHub</a>
-			<a href={DISCORD_URL}>Discord</a>
-			<a href={DOCS_ARCHIVE_URL}>Documentation archive</a>
+		<p class="footer-links">
+			<a href={WEBSITE_SOURCE_URL}>Website source</a>
+			<a href="/rss.xml">RSS</a>
 		</p>
 	</div>
 </footer>
@@ -26,6 +25,7 @@ const year = new Date().getFullYear();
 	.inner {
 		display: flex;
 		flex-wrap: wrap;
+		align-items: center;
 		gap: 0.5rem 1.5rem;
 		justify-content: space-between;
 		width: min(100% - 2rem, var(--etj-content-width));
@@ -37,7 +37,7 @@ const year = new Date().getFullYear();
 		margin: 0;
 	}
 
-	.links {
+	.footer-links {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 1rem;

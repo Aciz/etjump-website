@@ -10,5 +10,6 @@ export const CURRENT_VERSION_CHANGELOG = 'https://github.com/etjump/etjump/blob/
 
 export const GITHUB_URL = 'https://github.com/etjump/etjump';
 export const DISCORD_URL = 'https://discord.gg/AcyWMqR';
+export const WEBSITE_SOURCE_URL = 'https://github.com/etjump/etjump-website';
 export const RELEASES_URL = 'https://github.com/etjump/etjump/releases';
 export const DOCS_ARCHIVE_URL = 'https://etjump.readthedocs.io/';
