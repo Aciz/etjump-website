@@ -1,4 +1,6 @@
 ---
+import Icon from './Icon.astro';
+
 interface Heading {
 	depth: number;
 	slug: string;
@@ -70,6 +72,12 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 		</aside>
 	)}
 </div>
+
+{toc.length > 0 && (
+	<button class="back-to-top" type="button" aria-label="Back to top" title="Back to top" data-back-to-top>
+		<Icon name="arrow" size={18} />
+	</button>
+)}
 
 <script>
 	const toc = document.querySelector<HTMLElement>('.article-toc');
@@ -205,6 +213,32 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 			update();
 		});
 	}
+
+	const backToTop = document.querySelector<HTMLButtonElement>('[data-back-to-top]');
+
+	if (backToTop) {
+		const updateBackToTop = () => {
+			const desktop = window.matchMedia('(min-width: 74rem)').matches;
+			const target = document.querySelector<HTMLElement>(desktop ? '.article-toc' : '.article-toc-mobile');
+
+			if (target) {
+				const right = document.documentElement.clientWidth - target.getBoundingClientRect().right;
+				backToTop.style.right = `${Math.max(0, right)}px`;
+			}
+
+			backToTop.classList.toggle('is-visible', window.scrollY > 600);
+		};
+
+		backToTop.addEventListener('click', () => {
+			const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+			window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+		});
+
+		window.addEventListener('scroll', updateBackToTop, { passive: true });
+		window.addEventListener('resize', updateBackToTop);
+		window.addEventListener('load', updateBackToTop);
+		updateBackToTop();
+	}
 </script>
 
 <style>
@@ -324,6 +358,51 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 		border-left-color: var(--etj-accent);
 		color: var(--etj-accent-hover);
 		font-weight: 600;
+	}
+
+	.back-to-top {
+		position: fixed;
+		right: 1rem;
+		bottom: 1.5rem;
+		z-index: 40;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		padding: 0;
+		border: 1px solid var(--etj-border);
+		border-radius: var(--etj-radius);
+		background: var(--etj-surface);
+		color: var(--etj-muted);
+		box-shadow: 0 4px 12px rgb(0 0 0 / 0.18);
+		cursor: pointer;
+		opacity: 0;
+		visibility: hidden;
+		transform: translateY(0.5rem);
+		transition:
+			opacity 150ms ease,
+			transform 150ms ease,
+			visibility 150ms ease;
+	}
+
+	.back-to-top.is-visible {
+		opacity: 1;
+		visibility: visible;
+		transform: none;
+	}
+
+	.back-to-top:hover {
+		border-color: var(--etj-accent);
+		color: var(--etj-fg-strong);
+	}
+
+	.back-to-top > :global(svg) {
+		transform: rotate(-90deg);
+	}
+
+	:global(html[data-theme='light']) .back-to-top {
+		box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
 	}
 
 	.article-layout {
