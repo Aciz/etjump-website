@@ -64,7 +64,9 @@ import ThemeToggle from './ThemeToggle.astro';
 		};
 
 		menuToggle.addEventListener('click', () => {
-			setMenuOpen(!header.hasAttribute('data-menu-open'));
+			const open = !header.hasAttribute('data-menu-open');
+			setMenuOpen(open);
+			if (open) menu.querySelector<HTMLAnchorElement>('a')?.focus();
 		});
 
 		menu.addEventListener('click', (event) => {
