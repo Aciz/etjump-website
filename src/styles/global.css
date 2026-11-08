@@ -128,7 +128,7 @@ code:not(pre code) {
 	font-weight: 500;
 	padding: 0.2em 0.4em;
 	margin-block: 0.125rem;
-	border-radius: 0.25rem;
+	border-radius: var(--etj-radius-sm);
 	background: var(--etj-inline-code-bg);
 	color: var(--etj-accent-hover);
 	border: 1px solid var(--etj-border-strong);
@@ -173,6 +173,12 @@ pre.astro-code span {
 	--fb-ec-language-color: var(--etj-muted);
 }
 
+/* Expressive Code adds the 1px border width to this, so subtract it to land
+   on the shared 4px corner radius. */
+.expressive-code {
+	--ec-brdRad: calc(var(--etj-radius) - var(--ec-brdWd, 1px));
+}
+
 /* Markdown fences use Expressive Code, which defaults its frame border to the
    code background. Give it the same visible edge as the docs theme. */
 .expressive-code pre {
@@ -201,12 +207,12 @@ table::-webkit-scrollbar {
 
 table::-webkit-scrollbar-track {
 	background: color-mix(in srgb, var(--etj-border) 30%, transparent);
-	border-radius: 3px;
+	border-radius: var(--etj-radius-sm);
 }
 
 table::-webkit-scrollbar-thumb {
 	background: color-mix(in srgb, var(--etj-accent) 40%, transparent);
-	border-radius: 3px;
+	border-radius: var(--etj-radius-sm);
 }
 
 table::-webkit-scrollbar-thumb:hover {
@@ -424,7 +430,7 @@ a.card:hover {
 	display: inline-flex;
 	align-items: center;
 	padding: 0.1rem 0.5rem;
-	border-radius: 999px;
+	border-radius: var(--etj-radius-sm);
 	border: 1px solid var(--etj-border);
 	background: var(--etj-surface);
 	color: var(--etj-muted);

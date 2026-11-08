@@ -51,8 +51,8 @@
 	--etj-inline-code-bg: #23262e;
 
 	/* Shape and type */
-	--etj-radius: 0.625rem;
-	--etj-radius-sm: 0.375rem;
+	--etj-radius: 0.25rem;
+	--etj-radius-sm: 0.25rem;
 	--etj-font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
 	--etj-font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
 	--etj-content-width: 72rem;
