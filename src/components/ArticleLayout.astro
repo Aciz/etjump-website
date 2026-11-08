@@ -84,6 +84,21 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 		progressEl.classList.add('is-ready');
 	};
 
+	const mobileTocQuery = window.matchMedia('(max-width: 74rem)');
+
+	const updateScrollPadding = () => {
+		const summary = mobileToc?.querySelector('summary');
+
+		if (!mobileToc || !mobileTocQuery.matches || !summary) {
+			document.documentElement.style.removeProperty('scroll-padding-top');
+			return;
+		}
+
+		const headerHeight = header?.getBoundingClientRect().height ?? 0;
+		const summaryHeight = summary.getBoundingClientRect().height;
+		document.documentElement.style.scrollPaddingTop = `${headerHeight + 2 + summaryHeight + 12}px`;
+	};
+
 	const updateProgress = () => {
 		if (!progressBar) return;
 		const max = document.documentElement.scrollHeight - window.innerHeight;
@@ -176,14 +191,17 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 		window.addEventListener('scroll', onScroll, { passive: true });
 		window.addEventListener('resize', () => {
 			positionProgress();
+			updateScrollPadding();
 			update();
 		});
 
 		positionProgress();
+		updateScrollPadding();
 		update();
 
 		window.addEventListener('load', () => {
 			positionProgress();
+			updateScrollPadding();
 			update();
 		});
 	}
