@@ -1,0 +1,73 @@
+---
+---
+
+<div class="article-progress" aria-hidden="true">
+	<div class="article-progress__bar" data-article-progress></div>
+</div>
+
+<script>
+	const progressBar = document.querySelector<HTMLElement>('[data-article-progress]');
+	const progressEl = progressBar?.closest<HTMLElement>('.article-progress');
+	const header = document.querySelector<HTMLElement>('body > header');
+
+	const positionProgress = () => {
+		if (!progressEl) return;
+		if (header) progressEl.style.top = `${header.getBoundingClientRect().height}px`;
+		progressEl.classList.add('is-ready');
+	};
+
+	const updateProgress = () => {
+		if (!progressBar) return;
+		const max = document.documentElement.scrollHeight - window.innerHeight;
+		const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+		progressBar.style.transform = `scaleX(${ratio})`;
+	};
+
+	let ticking = false;
+	const onScroll = () => {
+		if (ticking) return;
+		ticking = true;
+		requestAnimationFrame(() => {
+			updateProgress();
+			ticking = false;
+		});
+	};
+
+	window.addEventListener('scroll', onScroll, { passive: true });
+	window.addEventListener('resize', () => {
+		positionProgress();
+		updateProgress();
+	});
+	window.addEventListener('load', () => {
+		positionProgress();
+		updateProgress();
+	});
+
+	positionProgress();
+	updateProgress();
+</script>
+
+<style>
+	.article-progress {
+		position: fixed;
+		inset-inline: 0;
+		top: calc(var(--etj-header-height) + 1px);
+		z-index: 49;
+		height: 2px;
+		visibility: hidden;
+		pointer-events: none;
+	}
+
+	.article-progress.is-ready {
+		visibility: visible;
+	}
+
+	.article-progress__bar {
+		width: 100%;
+		height: 100%;
+		background: var(--etj-accent);
+		transform: scaleX(0);
+		transform-origin: left;
+		will-change: transform;
+	}
+</style>
