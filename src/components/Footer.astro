@@ -1,4 +1,6 @@
 ---
+import BrandIcon from './BrandIcon.astro';
+import Icon from './Icon.astro';
 import { WEBSITE_SOURCE_URL } from '../consts';
 
 const year = new Date().getFullYear();
@@ -7,10 +9,20 @@ const year = new Date().getFullYear();
 <footer>
 	<div class="inner">
 		<p>&copy; {year} ETJump Team</p>
-		<p class="footer-links">
-			<a href={WEBSITE_SOURCE_URL}>Website source</a>
-			<a href="/rss.xml">RSS</a>
-		</p>
+		<ul class="footer-links">
+			<li>
+				<a href="/rss.xml">
+					<Icon name="rss" size={14} />
+					RSS
+				</a>
+			</li>
+			<li>
+				<a href={WEBSITE_SOURCE_URL}>
+					<BrandIcon name="github" size={14} />
+					Website source
+				</a>
+			</li>
+		</ul>
 	</div>
 </footer>
 
@@ -39,11 +51,19 @@ const year = new Date().getFullYear();
 
 	.footer-links {
 		display: flex;
-		flex-wrap: wrap;
-		gap: 1rem;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 0.4rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		text-align: right;
 	}
 
 	footer a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
 		color: var(--etj-muted);
 		text-decoration: none;
 	}
