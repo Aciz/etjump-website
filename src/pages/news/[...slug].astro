@@ -14,8 +14,12 @@ type Props = CollectionEntry<'news'>;
 
 const post = Astro.props;
 const { Content } = await render(post);
+
+// Rough reading time from the raw body; good enough for a byline.
+const words = post.body?.trim().split(/\s+/).length ?? 0;
+const readingTime = Math.max(1, Math.round(words / 200));
 ---
 
-<NewsPost {...post.data}>
+<NewsPost {...post.data} readingTime={readingTime}>
 	<Content />
 </NewsPost>

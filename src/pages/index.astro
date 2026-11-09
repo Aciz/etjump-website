@@ -194,7 +194,7 @@ const latestNews = (await getCollection('news', ({ data }) => !data.draft))
 					{latestNews.map((post) => (
 						<a class="card link-card" href={`/news/${post.id}/`}>
 							<p class="news-date">
-								<FormattedDate date={post.data.pubDate} />
+								{post.data.author} · <FormattedDate date={post.data.pubDate} />
 							</p>
 							<h3>{post.data.title}</h3>
 							<p>{post.data.description}</p>

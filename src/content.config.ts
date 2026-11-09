@@ -22,6 +22,7 @@ const news = defineCollection({
 			updatedDate: z.coerce.date().optional(),
 			heroImage: z.optional(image()),
 			tags: z.array(z.string()).default([]),
+			author: z.string().default('ETJump Team'),
 			draft: z.boolean().default(false),
 		}),
 });
@@ -32,6 +33,7 @@ const tutorials = defineCollection({
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),
+		author: z.string().optional(),
 		updated: z.coerce.date().optional(),
 		difficulty: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
 		tags: z.array(z.string()).default([]),
