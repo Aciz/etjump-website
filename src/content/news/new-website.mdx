@@ -1,0 +1,96 @@
+---
+title: 'New ETJump website is live!'
+description: 'A new home for ETJump.'
+pubDate: 2026-11-09
+author: 'Aciz'
+tags: ['site']
+---
+
+import { Image } from 'astro:assets';
+import mobileHome from '../../assets/news/new-website/home-page-mobile.jpg';
+
+For a long time, our website has been bare and basic. I've been working on a replacement for a while now, and today it's
+finally time to move on to a more modern platform and sunset the old site. Welcome to the new home for ETJump!
+
+## The big changes
+
+Undeniably, the biggest immediate change you'll notice is the fresh coat of paint. The looks have gotten a comprehensive
+overhaul, and the site now looks like something you'd expect from a website in the modern times. I still wanted to keep
+the site function-first, lightweight and fast, and I think I struck a pretty good balance with it.
+
+Under the hood, the website is now built on top of the [Astro framework](https://astro.build/). It is an incredibly
+versatile framework, although the site is only leveraging a tiny bit of its features - but it gives us options to expand
+into the future (which I'll touch on later in this news post).
+
+Mobile devices also now have first-class support. The design is fully responsive, adapting to small screens and making
+tiny changes to the layout and functionality to account for touch screens and less screen real estate. This was
+completely lacking on the old site. Anyone who visits the site on their phones should now have a much more pleasant
+experience.
+
+<figure class="news-figure">
+  <Image src={mobileHome} alt="The new ETJump home page on a phone" />
+  <figcaption>The home page on mobile.</figcaption>
+</figure>
+
+The site is still a static site, meaning there is no backend for now, but I do have plans to introduce one - more on
+that later as well.
+
+For anyone who might care, there is now also an [RSS feed](/rss.xml) for the news posts.
+
+## Downloads page
+
+A small new addition to the site is a dedicated [downloads page](/downloads). The old website basically just listed
+everything on the main page, which as you may have noticed, began stretching the layout quite a bit with more and more
+ETJump releases. We now have a dedicated page to list the old versions at, and the home page can stay clean with just
+the latest release.
+
+The new page also contains links to download the actual game - both major source ports, and 2.60b (standalone/Steam).
+Additionally, there's a direct link to download the latest development build, if you are curious about trying out new
+features ahead of a stable release.
+
+## Documentation
+
+Building the website on top of Astro also gives us an opportunity to integrate a great documentation platform directly
+into the site. For this purpose, I have also wired up the
+[Starlight documentation theme](https://starlight.astro.build/) behind the scenes to the new site. However, porting over
+the documentation is quite a big job, as I also have some bigger plans regarding that in the future. For now, the
+documentation still lives at [Read the Docs](https://etjump.readthedocs.io/) until I've gotten around to moving it to
+the new site. This will be the top priority after the launch, so look forward to that in the near future.
+
+## New content, made simpler
+
+A big annoyance with the old site was that adding new content was... Not very straightforward. A new piece of content
+meant writing a new HTML page by hand, which was enough to deter me from doing a whole lot of anything. On the new site,
+adding new content is a breeze - anyone who knows how to write markdown can write a piece of content on the site. The
+pages are automatically built from a standard layout, which means all that an article needs is the content. And if you
+do want to get fancy, [MDX](https://mdxjs.com/docs/what-is-mdx/) is also supported.
+
+With content being simple to write, I have plans to move ETJump release announcements to this website as news items as
+well. Writing them in Discord was always a bit limiting with character limits and formatting options. Going forward,
+expect a news post for each new ETJump release - I'll still announce them in Discord, but the release highlights that
+used to be posted to Discord will live here.
+
+If you ever feel like you'd want to write a tutorial, an article, or anything that you want to share and make
+discoverable with the community: the barrier of entry is now very low. All your page needs is
+[YAML frontmatter](https://www.markdownlang.com/advanced/frontmatter.html) and content written in markdown, the rest is
+automatically handled by the site. You can take a look at
+[any of the tutorial pages](https://github.com/etjump/etjump-website/tree/main/src/content/tutorials) to get an example
+of how to write a page.
+
+## Future plans
+
+Having a more modern platform means we can do a lot more cool things with the site. Over the years, there have been
+talks about things like timerun record browsing, map database, server browser and so on - all of which would have been a
+pain to implement on the old site. All of this needs a backend, which is now fully supported within the framework that
+the website is built on, so these things can actually become a reality now. However, do not expect these to be available
+quite yet - they are still big pieces of work and have a lot of technical and practical obstacles to solve.
+
+## Questions, feedback?
+
+You'll likely see tiny things changing here and there in the coming weeks, as I work on more things. The groundwork is
+now done and the site is in a serviceable state, but there are likely small improvements and changes I'll be making as
+things come up. I would also love to hear your thoughts on the new site, and any feedback and suggestions for the
+future. And if something is broken, please let us know either over at [Discord](https://discord.gg/AcyWMqR), or open an
+issue at [GitHub](https://github.com/etjump/etjump-website/issues).
+
+I hope you enjoy the new site - there should be some good things coming in the future!
