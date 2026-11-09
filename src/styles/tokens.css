@@ -5,7 +5,6 @@
  *
  *   H  #006633  (0.0, 0.4, 0.2)  primary accent, solid surfaces
  *   H+ #33B377                    lightened H for text on dark backgrounds
- *   A  #FF991A  (1.0, 0.6, 0.1)  optional warm secondary accent
  *
  * Keep colors here and refer to the semantic names from components, never to
  * raw hex values. The palette may still change before the rebrand settles.
@@ -37,8 +36,6 @@
 	--etj-accent-solid-hover: #008040;
 	--etj-accent-contrast: #ffffff;
 	--etj-accent-soft: #0a2418;
-	/* A (#ff991a) - optional warm secondary */
-	--etj-accent-2: #ff991a;
 
 	/* Status */
 	--etj-success: #10b981;
@@ -84,7 +81,6 @@
 	--etj-accent-solid-hover: #004d26;
 	--etj-accent-contrast: #ffffff;
 	--etj-accent-soft: #dcf2e5;
-	--etj-accent-2: #ff991a;
 
 	--etj-code-bg: #f6f7f9;
 	--etj-inline-code-bg: #eef0f3;

@@ -12,9 +12,7 @@ const tutorials = (await getCollection('tutorials', ({ data }) => !data.draft)).
 	<p class="lede">Tutorials written by the community.</p>
 
 	{tutorials.length === 0 ? (
-		<p class="muted">
-			No tutorials yet. Add a Markdown file under <code>src/content/tutorials/</code>.
-		</p>
+		<p class="muted">No tutorials yet.</p>
 	) : (
 		<div class="card-grid">
 			{tutorials.map((tutorial) => (

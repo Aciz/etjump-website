@@ -13,9 +13,7 @@ const posts = (await getCollection('news', ({ data }) => !data.draft)).sort(
 	<p class="lede">Development updates, release notes and other news.</p>
 
 	{posts.length === 0 ? (
-		<p class="muted">
-			No posts yet. Add a Markdown file under <code>src/content/news/</code>.
-		</p>
+		<p class="muted">No news posts yet.</p>
 	) : (
 		<ul class="post-list">
 			{posts.map((post) => (
