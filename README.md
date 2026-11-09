@@ -46,7 +46,7 @@ placeholder documentation section that will eventually replace Read the Docs.
 | `src/styles/global.css`    | Site styles                                                       |
 | `src/styles/starlight.css` | Maps tokens onto Starlight's and Galaxy's variables               |
 | `src/pages/design.astro`   | Preview of type, palette and components (noindex, not in sitemap) |
-| `public/`                  | Static files served as-is (`CNAME`, favicon, fonts, social image) |
+| `public/`                  | Static files served as-is (`CNAME`, favicon, social image)        |
 
 ## Adding content
 
