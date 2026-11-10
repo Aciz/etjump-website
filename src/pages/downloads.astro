@@ -93,13 +93,13 @@ const engines: Engine[] = [
 				</ul>
 
 				<p class="release__meta">
-					{stableDate && (
+					{stableDate && <span>Released {stableDate}</span>}
+					{stableSize && (
 						<span>
-							Released {stableDate}
-							{stableSize && ' |'}
+							{stableDate && <span aria-hidden="true">·&nbsp;</span>}
+							{stableSize}
 						</span>
 					)}
-					{stableSize && <span>{stableSize}</span>}
 				</p>
 			</div>
 
@@ -206,7 +206,11 @@ const engines: Engine[] = [
 
 					<p class="release-picker__meta">
 						{olderDate && <span data-release-date>{olderDate}</span>}
-						{olderDate && olderSize && <span data-release-sep>|</span>}
+						{olderDate && olderSize && (
+							<span data-release-sep aria-hidden="true">
+								·
+							</span>
+						)}
 						{olderSize && <span data-release-size>{olderSize}</span>}
 						<a data-release-page href={older[0].url}>
 							View on GitHub
@@ -233,13 +237,13 @@ const engines: Engine[] = [
 					<>
 						<p class="release__meta">
 							{devBuild && <span class="release__build">{devBuild}</span>}
-							{devDate && (
+							{devDate && <span>Built {devDate}</span>}
+							{devSize && (
 								<span>
-									Built {devDate}
-									{devSize && ' |'}
+									{devDate && <span aria-hidden="true">·&nbsp;</span>}
+									{devSize}
 								</span>
 							)}
-							{devSize && <span>{devSize}</span>}
 						</p>
 
 						<div class="release__actions">
