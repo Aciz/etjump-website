@@ -34,6 +34,7 @@ const tutorials = defineCollection({
 		title: z.string(),
 		description: z.string(),
 		author: z.string().optional(),
+		pubDate: z.coerce.date().optional(),
 		updated: z.coerce.date().optional(),
 		difficulty: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
 		tags: z.array(z.string()).default([]),

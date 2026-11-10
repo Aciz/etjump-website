@@ -1,6 +1,7 @@
 ---
 import ArticleProgress from './ArticleProgress.astro';
 import BackToTop from './BackToTop.astro';
+import FormattedDate from './FormattedDate.astro';
 import ImageLightbox from './ImageLightbox.astro';
 
 interface Heading {
@@ -13,10 +14,12 @@ interface Props {
 	title: string;
 	description: string;
 	difficulty?: string;
+	author?: string;
+	pubDate?: Date;
 	headings?: Heading[];
 }
 
-const { title, description, difficulty, headings = [] } = Astro.props;
+const { title, description, difficulty, author, pubDate, headings = [] } = Astro.props;
 
 // Match the old manual TOC: sections and subsections, not every h4.
 const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3);
@@ -30,6 +33,17 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 			{difficulty && <p class="badge">{difficulty}</p>}
 			<h1>{title}</h1>
 			<p class="lede">{description}</p>
+			{(author || pubDate) && (
+				<p class="article-byline">
+					{author && <span class="article-author">{author}</span>}
+					{pubDate && (
+						<span>
+							{author && <span aria-hidden="true">·&nbsp;</span>}
+							<FormattedDate date={pubDate} />
+						</span>
+					)}
+				</p>
+			)}
 		</header>
 
 		{toc.length > 0 && (
@@ -304,7 +318,24 @@ const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 
 	}
 
 	.article-header {
-		margin-bottom: 2rem;
+		margin-bottom: 2.25rem;
+		padding-bottom: 1.75rem;
+		border-bottom: 1px solid var(--etj-border);
+	}
+
+	.article-byline {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.35rem;
+		margin: 1rem 0 0;
+		color: var(--etj-muted);
+		font-size: 0.85rem;
+	}
+
+	.article-author {
+		color: var(--etj-fg-strong);
+		font-weight: 600;
 	}
 
 	.badge {

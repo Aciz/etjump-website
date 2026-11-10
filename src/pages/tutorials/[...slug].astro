@@ -22,6 +22,8 @@ const { Content, headings } = await render(tutorial);
 		title={tutorial.data.title}
 		description={tutorial.data.description}
 		difficulty={tutorial.data.difficulty}
+		author={tutorial.data.author}
+		pubDate={tutorial.data.pubDate}
 		headings={headings}
 	>
 		<Content />

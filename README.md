@@ -78,10 +78,10 @@ draft: false
 
 ### Tutorials
 
-Tutorials live in `src/content/tutorials/` and support `title`, `description`, optional `author`, optional `updated`,
-optional `difficulty` (`beginner`, `intermediate` or `advanced`), `tags` and `draft`. They render in the article layout
-with a table of contents, reading progress bar, back-to-top button and image lightbox. These can be either markdown or
-MDX pages.
+Tutorials live in `src/content/tutorials/` and support `title`, `description`, optional `author`, optional `pubDate`,
+optional `updated`, optional `difficulty` (`beginner`, `intermediate` or `advanced`), `tags` and `draft`. They render in
+the article layout with a table of contents, reading progress bar, back-to-top button and image lightbox. These can be
+either markdown or MDX pages.
 
 ### Documentation
 
