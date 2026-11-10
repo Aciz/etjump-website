@@ -2,12 +2,12 @@
 ---
 
 <dialog class="image-preview" data-image-preview aria-label="Image preview">
+	<img class="image-preview__image" data-image-preview-image alt="" />
 	<button class="image-preview__close" type="button" aria-label="Close image preview" data-image-preview-close>
 		<svg viewBox="0 0 24 24" aria-hidden="true">
 			<path d="m6 6 12 12M18 6 6 18"></path>
 		</svg>
 	</button>
-	<img class="image-preview__image" data-image-preview-image alt="" />
 </dialog>
 
 <script>
@@ -74,14 +74,16 @@
 	}
 
 	.image-preview {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.5rem;
 		max-width: 95vw;
 		max-height: 92vh;
+		max-height: 92svh;
 		padding: 0;
-		border: 1px solid var(--etj-border);
-		border-radius: var(--etj-radius);
-		background: var(--etj-surface-2);
-		color: var(--etj-fg);
-		overflow: hidden;
+		border: 0;
+		background: transparent;
+		overflow: visible;
 	}
 
 	.image-preview::backdrop {
@@ -91,18 +93,18 @@
 
 	.image-preview__image {
 		display: block;
-		max-width: 95vw;
+		max-width: calc(95vw - 3rem);
 		max-height: 90vh;
+		max-height: 90svh;
 		width: auto;
 		height: auto;
+		border-radius: var(--etj-radius);
 		object-fit: contain;
 	}
 
 	.image-preview__close {
-		position: absolute;
-		top: 0.6rem;
-		right: 0.6rem;
-		z-index: 1;
+		flex: none;
+		align-self: flex-start;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -129,5 +131,23 @@
 		stroke: currentColor;
 		stroke-width: 2;
 		stroke-linecap: round;
+	}
+
+	@media (max-width: 40rem) {
+		.image-preview {
+			flex-direction: column;
+			align-items: flex-end;
+		}
+
+		.image-preview__image {
+			max-width: 95vw;
+			max-height: calc(90vh - 3rem);
+			max-height: calc(90svh - 3rem);
+		}
+
+		.image-preview__close {
+			order: -1;
+			align-self: flex-end;
+		}
 	}
 </style>
