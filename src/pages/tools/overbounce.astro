@@ -5,8 +5,6 @@ const MAX_HEIGHT = 65_536 * 2;
 
 <BaseLayout title="Overbounce calculator" description="Calculate fall and jump overbounce heights for Enemy Territory.">
 	<h1>Overbounce calculator</h1>
-	<p class="lede">Find the heights that overbounce in ETJump.</p>
-
 	<section class="calculator">
 		<div class="fields">
 			<label for="min-height">Minimum height</label>
@@ -150,6 +148,11 @@ const MAX_HEIGHT = 65_536 * 2;
 			grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
 			gap: 1rem;
 			max-width: 32rem;
+			min-width: 0;
+		}
+
+		.fields input {
+			width: 100%;
 		}
 
 		.fields label {
@@ -164,6 +167,7 @@ const MAX_HEIGHT = 65_536 * 2;
 			display: grid;
 			grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
 			gap: 2rem;
+			min-width: 0;
 		}
 
 		.results h2 {
