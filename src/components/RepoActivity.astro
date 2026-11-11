@@ -167,23 +167,24 @@ const repoUrl = `https://github.com/${repo}`;
 
 <style is:global>
 	.repo-activity {
-		display: grid;
-		gap: 1rem;
+		display: block;
 	}
 
 	.repo-activity__head {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: end;
 		justify-content: space-between;
 		gap: 1rem;
-		margin-bottom: 0.5rem;
+		margin-bottom: 2rem;
 	}
 
 	.repo-activity__head h2 {
-		margin: 0 0 0.25rem;
+		margin: 0 0 0.6rem;
 	}
 
 	.repo-activity__head p {
+		max-width: 44rem;
 		margin: 0;
 		color: var(--etj-muted);
 	}
