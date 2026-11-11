@@ -26,14 +26,14 @@ A curated list of mapping tools, references and assets, collected from the ETJum
 ## Tutorials & references
 
 - [Shader Manual](https://garux.github.io/shaderManual/contents.html)
-- [General mapping information](https://etjump.com/tutorials/general-mapping-information.html)
+- [General mapping information](https://etjump.com/tutorials/general-mapping-information)
 - [id Tech 3 mapping trello board (massive collection of resources)](https://trello.com/b/zJp4pE3m/id-tech-3)
 - [SimonOC's (sock) tutorials](https://www.simonoc.com/pages/articles.html)
 - [2bit's mapping tutorial (basics of mapping)](http://www.pythononline.co.uk/et/tutorial.htm)
 - [Chruker's site (mainly useful for scripting reference)](http://games.chruker.dk/enemy_territory/)
 - [Worldspawn mapping tutorials (Q3, most applies to ET too)](https://ws.q3df.org/level_design/)
 - [Surfacegroup tutorials (RTCW & ET)](https://www.surfacegroup.org/tutorials/)
-- [Fake directional fog](https://etjump.com/tutorials/fake-directional-fog.html)
+- [Fake directional fog](https://etjump.com/tutorials/fake-directional-fog)
 - [Movement bugs/features relevant for mapping](https://www.youtube.com/watch?v=159xUWiwyys)
 - [Brush arch + texturing](https://www.youtube.com/watch?v=qA9eNOkD1iY)
 - [Spiral staircase](https://www.youtube.com/watch?v=YZq1vKseDDs)
@@ -44,7 +44,7 @@ A curated list of mapping tools, references and assets, collected from the ETJum
 
 - [Pack3r (create release PK3)](https://github.com/ovska/Pack3r)
 - [QtPack3r (graphical front-end for Pack3r)](https://github.com/Aciz/QtPack3r/)
-- [Overbounce calculator](https://etjump.com/utilities/overbounce/)
+- [Overbounce calculator](https://etjump.com/tools/overbounce/)
 - [Overbounce list (includes sticky heights)](https://q3df.org/wiki?p=189)
 - [Terrain generator (standalone, also included in Radiant as a a plugin)](https://github.com/vallzy/Terrain-Generator/)
 - [Blender BSP/MAP/MD3 plugin](https://github.com/SomaZ/Blender_BSP_Importer/releases)
