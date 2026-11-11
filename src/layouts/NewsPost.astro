@@ -110,14 +110,17 @@ const { title, description, pubDate, updatedDate, heroImage, author, readingTime
 	}
 
 	.news-post :global(.news-figure) {
-		width: min(100%, 18rem);
+		max-width: 100%;
 		margin: 2rem auto;
 	}
 
 	.news-post :global(.news-figure img) {
 		display: block;
-		width: 100%;
+		width: auto;
 		height: auto;
+		max-width: 100%;
+		max-height: 33rem;
+		margin-inline: auto;
 		border: 1px solid var(--etj-border);
 		border-radius: var(--etj-radius);
 		box-shadow: 0 6px 18px rgb(0 0 0 / 0.16);
