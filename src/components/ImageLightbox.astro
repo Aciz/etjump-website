@@ -58,6 +58,7 @@
 		imagePreview.addEventListener('close', () => {
 			document.body.style.overflow = '';
 			imagePreviewImage.removeAttribute('src');
+			imagePreviewImage.alt = '';
 			lastTrigger?.focus();
 		});
 	}
@@ -84,6 +85,11 @@
 		border: 0;
 		background: transparent;
 		overflow: visible;
+	}
+
+	/* An author `display` value overrides the UA's closed-dialog rule; keep it hidden. */
+	.image-preview:not([open]) {
+		display: none;
 	}
 
 	.image-preview::backdrop {
