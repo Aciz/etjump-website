@@ -1,0 +1,152 @@
+---
+title: 'ETJump 3.7.0 released'
+description: 'ETJump 3.7.0 is here: smoother pmove, timerun history, client-side portals and more.'
+pubDate: 2026-11-12
+author: 'Aciz'
+tags: ['etjump', 'release']
+---
+
+import { Image } from 'astro:assets';
+import recordHistory from '../../assets/news/etjump-370-released/record-history.jpg';
+import bestSegments from '../../assets/news/etjump-370-released/best-segments.jpg';
+import bestSegmentsGlobal from '../../assets/news/etjump-370-released/best-segments-global.jpg';
+import portalPrediction from '../../assets/news/etjump-370-released/portal-prediction.webp?url';
+
+After nearly 3 months of development, ETJump 3.7.0 is finally here! There's a lot of new and exciting stuff in this
+release - read on for the main highlights.
+
+## pmove_fixed, fixed
+
+The day is finally here. `pmove_fixed 1` has tortured us with choppy visuals since the beginning of time due to locking
+the client's rendering rate to 125 FPS. With this release, we're introducing a new cvar called `etj_lerpPmove`. When
+enabled, this cvar applies interpolation between physics frames on the client side, smoothing out the rendering: every
+frame now gets updated view angles, position, velocity and so on, rather than displaying the previous physics frame
+results until a new one is calculated. This was previously applied to view angles only with `etj_smoothAngles`, but it
+was never the full answer as movement still remained choppy. With the addition of `etj_lerpPmove`, we're now deprecating
+`etj_smoothAngles`, and it will be removed in a future release.
+
+This is an opt-in feature for now: once it has gotten some wider testing and is deemed stable, we plan to enable it by
+default.
+
+## Functional error handling on Windows
+
+This has been another long-standing issue: ever since ETJump moved from C to C++ back in 2.2.0, the error handling on
+Windows has not worked properly. Every time the game tried to display an error to you and drop you back to the main
+menu, the game would instead crash to desktop. Without going too much into technical details, this was due to a
+fundamental incompatibility with how the game engine does errors, and how C++ code expects the mod DLLs to be unloaded.
+This issue should finally be resolved in this release, and you should now see errors properly on Windows too. And if
+something is still broken - please let us know. Massive thanks to suburb for the work he did on this!
+
+## Timerun system updates
+
+We've got a few new and exciting timerun features in this release: record history, best segment tracking and a "native"
+way to remove timerun records from the leaderboards.
+
+### Record history
+
+The timerun system now tracks and records every single improvement players make on a run. This allows players to track
+their historical progression on a run - you can view every single improvement you've made over time, and how they were
+ranked at the time of recording.
+
+<figure class="news-figure">
+  <Image src={recordHistory} alt="Output of record-history command" />
+  <figcaption>Improvements for each timerun are now tracked.</figcaption>
+</figure>
+
+Note that there is no history available prior to ETJump 3.7.0 - the progression can only be tracked starting from this
+release.
+
+### Best segment tracking
+
+Those who watch speedrunning content on other games are likely familiar with concepts such as "gold split" or "sum of
+best segments". With this release, we're introducing these features to ETJump as well. The timerun system now tracks
+each player's best "segments" on a run - every checkpoint and end segment of a run (last checkpoint to run end) is
+stored in the database, and players can view the absolute best times for each section of a timerun. The checkpoint timer
+can also visualize "gold splits" with `etj_checkpointsShowGold` - this colors the checkpoint timer gold when you beat
+the best time on a segment. You can view the best segments for each run with the `best-segments` command - either your
+personal bests, or global bests. Similar to records, the historical improvements are also tracked and can be viewed with
+the `best-segments-history` command.
+
+<figure class="news-figure">
+  <Image src={bestSegments} alt="Output of best-segments command" />
+  <figcaption>Personal best segments on a run.</figcaption>
+</figure>
+
+<figure class="news-figure">
+  <Image src={bestSegmentsGlobal} alt="Output of best-segments command with -g flag" />
+  <figcaption>Global best segments on a run.</figcaption>
+</figure>
+
+### Record & segment removal
+
+This may seem like an odd thing to have, but over the years there have been numerous times where players have asked for
+their runs to be removed from the leaderboards. Prior to this, it meant manually executing SQL on the timerun database,
+which was always a bit scary and a hassle, especially without taking the server down momentarily. We now have a native
+way in the mod to do this: `remove-record` command (and `remove-segment` for the new segment feature).
+
+Any player is allowed to remove their own records/segments, should they want a "fresh" start on a run. Server admins
+with the `T` admin flag (timerun management) are allowed to remove records and segments from other players as well. This
+is to make it easy for admins to remove any cheated records from the leaderboards, or "stale" times (e.g. a user who has
+lost their GUID and plays under a new identity, and wants their old records gone from the leaderboards). Any
+record/segment removed with these commands gets archived in the timerun database - nothing is permanently deleted. The
+removed times can be viewed with `list-removed-records` and `list-removed-segments` commands.
+
+Should you or an admin ever need to restore a record or a segment, it can be done with `restore-record` and
+`restore-segment` commands. You're only allowed to restore records/segments deleted by yourself, unless you have the `T`
+admin flag.
+
+## Per-team worldspawn key overrides
+
+Another highly requested feature is finally here: per-team worldspawn key overrides. With the `target_wskey_overrides`
+entity, mappers can now apply per-team or timerun-specific conditions to `nonoclip`, `noprone` and `nosave` worldspawn
+keys. In practice, maps can now have these features enabled/disabled on one team only. Additionally, to properly support
+noclip/prone/save zones, new values are accepted on these worldspawn keys: always allow (2) and never allow (3). This
+enables, for example, save zones to be applied to only one team, while the other can freely save anywhere.
+
+## Client-side spawned portals
+
+Portalgun has gotten a major gameplay upgrade in this release with client-side spawned portals. Spawning a portalgun
+portal is now predicted on the client side, meaning ping is no longer a factor for spawning portals - any time you fire
+a portal, you should immediately see it spawn on your client, without having to wait for the server to confirm it. This
+requires the `g_portalPredict` server cvar, or the `portalpredict` worldspawn key to be set on the map. Big thanks to
+vld for implementing this feature!
+
+<figure class="news-figure">
+  <img
+    src={portalPrediction}
+    alt="Side-by-side comparison of portal spawning with and without client-side prediction"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Firing a portal on 150ms ping: ETJump 3.6.2 (left) vs ETJump 3.7.0 (right).</figcaption>
+</figure>
+
+## Other minor features
+
+There are a few more smaller additions and changes in this release:
+
+- `etj_drawYaw` can be enabled to indicate when you are turning left or right.
+- `etj_drawFallDamageDetector` displays fall damage the player would take when landing on a surface.
+- Menu sliders can now be adjusted with left/right arrow keys and the mouse wheel.
+- `editentity` script action allows editing an entity via mapscript that does not have a `scriptname` set.
+- Bundled mapscripts for `dreamwork` and `the_biome_expedition` to fix some issues with their original releases.
+- Adjusted default values for tons of client side cvars to improve the out-of-box experience.
+
+## Bug fixes
+
+There's also a healthy amount of minor bug fixes in this release, some of the more important ones are listed here:
+
+- Autoload slots were not correctly invalidated on timerun start, allowing players to potentially load into them after a
+  timerun was started.
+- Fireteam chat could be visible to player who were not part of the sender's fireteam.
+- A few crash fixes on timeruns related to season deletion and other season management commands.
+- Timerun start or `target_init` could sometimes give players a nonexistent weapon.
+- Rankings were calculated with different tie-break rules compared to the records leaderboards.
+- HUD calculations were broken inside `noprone` brushes, when cheats were enabled.
+
+## Full changelog
+
+As always, you can read the full changelog over on
+[GitHub](https://github.com/etjump/etjump/blob/dev/changelog.md#etjump-370), or in the in-game menus.
+
+Head over to the [downloads page](/downloads) to grab the release!

@@ -3,9 +3,10 @@
 export const SITE_TITLE = 'ETJump';
 export const SITE_DESCRIPTION = 'A trickjump modification for Wolfenstein: Enemy Territory.';
 
-export const CURRENT_VERSION = '3.6.2';
-export const CURRENT_VERSION_DOWNLOAD = 'https://github.com/etjump/etjump/releases/download/3.6.2/etjump-3.6.2.zip';
-export const CURRENT_VERSION_CHANGELOG = 'https://github.com/etjump/etjump/blob/dev/changelog.md#etjump-362';
+// Update these 3 constants whenever a new release is made.
+export const CURRENT_VERSION = '3.7.0';
+export const CURRENT_VERSION_DOWNLOAD = 'https://github.com/etjump/etjump/releases/download/3.7.0/etjump-3.7.0.zip';
+export const CURRENT_VERSION_CHANGELOG = 'https://github.com/etjump/etjump/blob/dev/changelog.md#etjump-370';
 
 export const GITHUB_URL = 'https://github.com/etjump/etjump';
 export const DISCORD_URL = 'https://discord.gg/AcyWMqR';
